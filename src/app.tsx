@@ -9,6 +9,7 @@ export function App() {
   return (
     <>
       <h1 className="underline">Vite + Preact</h1>
+      <button className="btn btn-secondary">primary</button>
     </>
   );
 }
