@@ -1,0 +1,51 @@
+**Custom License Agreement for The Citizen Times Source Code**
+
+**Preamble:**
+
+This license agreement governs your access to and interaction with the source code of The Citizen Times (hereinafter referred to as "the Software"), developed and owned by Ellingsen Utvikling (hereinafter referred to as "the Licensor"). By accessing, contributing to, or otherwise utilizing the Software, you (hereinafter referred to as "the Licensee") agree to be bound by the terms and conditions outlined herein.
+
+**1. Grant of Limited License:**
+
+- **Read-Only Access:** The Licensor grants the Licensee a non-exclusive, non-transferable, and revocable license to view and read the Software's source code for the sole purpose of understanding its functionality and architecture.
+- **Contribution Rights:** The Licensor grants the Licensee a non-exclusive, non-transferable, and revocable license to contribute modifications, bug fixes, and enhancements to the Software's source code, subject to the review and approval of the Licensor.
+
+**2. Restrictions:**
+
+- **No Copying or Distribution:** The Licensee is strictly prohibited from copying, reproducing, distributing, or transmitting the Software's source code, in whole or in part, in any form or by any means, without the express written permission of the Licensor.
+- **No Derivative Works:** The Licensee is strictly prohibited from creating derivative works based on the Software's source code, including but not limited to modifications, adaptations, or remixes.
+- **No Commercial Use:** The Licensee is strictly prohibited from using the Software's source code for any commercial purpose, including but not limited to selling, licensing, or otherwise profiting from the Software or any derivative works.
+- **No Reverse Engineering:** The Licensee is strictly prohibited from reverse engineering, decompiling, or disassembling the Software's source code.
+- **No Sub-licensing:** The Licensee is prohibited from sub-licensing any rights granted under this license.
+
+**3. Contribution Terms:**
+
+- **Licensor Ownership:** All contributions made by the Licensee to the Software's source code shall become the sole and exclusive property of the Licensor.
+- **Contribution Review:** The Licensor reserves the right to review, modify, accept, or reject any contributions made by the Licensee.
+- **Contribution Agreement:** All contributors will need to agree to a Contributor License Agreement(CLA) before their code can be accepted. The CLA will state that all code they submit will be owned by Ellingsen Utvikling.
+- **Attribution:** The Licensor may, at its sole discretion, provide attribution to the Licensee for their contributions.
+
+**4. Termination:**
+
+- The Licensor may terminate this license at any time, with or without cause, upon written notice to the Licensee.
+- Upon termination, the Licensee shall immediately cease all use of the Software's source code and delete any copies thereof.
+
+**5. Disclaimer of Warranty:**
+
+- The Software's source code is provided "as is" without any warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+**6. Limitation of Liability:**
+
+- In no event shall the Licensor be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in connection with the use or inability to use the Software's source code.
+
+**7. Governing Law:**
+
+- This license agreement shall be governed by and construed in accordance with the laws of [Your Jurisdiction].
+
+**8. Entire Agreement:**
+
+- This license agreement constitutes the entire agreement between the Licensor and the Licensee with respect to the subject matter hereof and supersedes all prior or contemporaneous communications and proposals, whether oral or written.
+
+**By accessing or contributing to the Software, you acknowledge that you have read, understood, and agree to be bound by the terms and conditions of this license agreement.**
+
+**Ellingsen Utvikling**
+**24.02.2025**
