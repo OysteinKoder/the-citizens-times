@@ -2,7 +2,7 @@ import { signal } from "@preact/signals";
 import dogScientist from "../assets/scientistDog.png";
 import badmintonImg from "../assets/badminton.png";
 
-export const MockNewsData = signal([
+export const MockMainNewsData = signal([
   {
     title:
       "The new arena for badminton is of high quality. “No surprise there”, says supreme court.",

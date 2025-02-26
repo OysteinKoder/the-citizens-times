@@ -14,9 +14,6 @@ const MainNewsCard = () => {
               <h2 className="sm:font-semibold md:font-extrabold">
                 {news.title}
               </h2>
-              <span className="sm hidden md:block md:font-light mt-2 mb-2">
-                {news.ingress}
-              </span>
             </div>
           </div>
         </>
