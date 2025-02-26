@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@preact/signals": "^2.0.1",
     "@tailwindcss/postcss": "^4.0.9",
     "postcss": "^8.5.3",
     "preact": "^10.26.2",
