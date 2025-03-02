@@ -77,3 +77,11 @@ export const MockAdsData = signal([
       "Discover the latest iPhone 14 with cutting-edge technology and sleek design.",
   },
 ]);
+
+export const formState = signal({
+  title: "",
+  mainPicture: null as File | null,
+  pictures: [] as File[],
+  text: "",
+  tags: [] as string[],
+});

@@ -1,17 +1,25 @@
-import { h } from "preact";
-import { signal } from "@preact/signals";
+import { formState } from "../state/globalState";
+formState;
 
 const PostForm = () => {
-  const formState = signal({
-    title: "",
-    mainPicture: null as File | null,
-    pictures: [] as File[],
-    text: "",
-  });
-
   const handleSubmit = (e: Event) => {
     e.preventDefault();
     // Handle form submission
+  };
+
+  const handleTagInput = (e: Event) => {
+    if (e instanceof KeyboardEvent && e.key === "Enter") {
+      e.preventDefault();
+      const input = e.target as HTMLInputElement;
+      if (input.value.trim()) {
+        formState.value.tags = [...formState.value.tags, input.value.trim()];
+        input.value = "";
+      }
+    }
+  };
+
+  const removeTag = (index: number) => {
+    formState.value.tags = formState.value.tags.filter((_, i) => i !== index);
   };
 
   return (
@@ -75,6 +83,38 @@ const PostForm = () => {
           }
           class="textarea textarea-bordered w-full"
         ></textarea>
+      </div>
+      <div class="mb-4">
+        <label for="tags" class="label">
+          <span class="label-text">Tags:</span>
+        </label>
+        <input
+          type="text"
+          id="tags"
+          onKeyDown={handleTagInput}
+          class="input input-bordered w-full"
+          placeholder="Press Enter to add tags"
+        />
+        <div class="mt-2">
+          {formState.value.tags.map((tag, index) => (
+            <span class="badge badge-primary mr-2 mb-2" key={index}>
+              {tag}
+              <button
+                type="button"
+                class="ml-1"
+                onClick={() => removeTag(index)}
+              >
+                &times;
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
+      <p>Tags Added:</p>
+      <div className="flex row">
+        {formState.value.tags.map((tag, idx) => {
+          <p key={idx}>{tag}</p>;
+        })}
       </div>
       <button type="submit" class="btn btn-primary w-full">
         Submit
