@@ -1,6 +1,7 @@
 import { MockMainNewsData } from "../state/globalState";
 
-const MainNewsCard = () => {
+// The headline news will be the first two news shown
+const HeadlineNewsCard = () => {
   return (
     <div>
       {MockMainNewsData.value.slice(0, 2).map((news) => (
@@ -8,7 +9,7 @@ const MainNewsCard = () => {
           key={news.ingress}
           className="bg-base-100 shadow-xl mt-4 md:mt-10 md:pt-2"
         >
-          <figure className="flex justify-center align-center md:h-60">
+          <figure className="flex justify-center align-center md:h-60 p-3">
             <img src={news.img} alt={news.alt} />
           </figure>
           <div className="p-1">
@@ -23,4 +24,4 @@ const MainNewsCard = () => {
   );
 };
 
-export default MainNewsCard;
+export default HeadlineNewsCard;

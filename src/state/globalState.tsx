@@ -2,6 +2,9 @@ import { signal } from "@preact/signals";
 import dogScientist from "../assets/scientistDog.png";
 import badmintonImg from "../assets/badminton.png";
 
+// Mock data used for generating news
+// Will later be replaced by a fetch and data from a backend
+
 export const MockMainNewsData = signal([
   {
     title:
@@ -61,6 +64,8 @@ export const MockMainNewsData = signal([
   },
 ]);
 
+// Mock data used for generating ads
+// Will later be replaced by google ads or something similar
 export const MockAdsData = signal([
   {
     title: "The new volvo xc40 is here and it is a real game changer!",

@@ -1,5 +1,6 @@
 import { MockMainNewsData, MockAdsData } from "../state/globalState";
 
+// Sub news will be after the headline news
 const SubNewsCard = () => {
   console.log(MockMainNewsData);
   return (
