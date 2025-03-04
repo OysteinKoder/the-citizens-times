@@ -3,8 +3,14 @@
 Citizen Times
 Uses following libraries
 
-Preact
-Tailwind Css
-Daisy Ui for components
+framework/library: Preact
+
+css: Tailwind Css
+css library: Daisy Ui for components
+https://tailwindcss.com/docs/installation/using-vite
+https://daisyui.com/
+
+routing: preact-iso
+https://github.com/preactjs/preact-iso
 
 Please read the licence

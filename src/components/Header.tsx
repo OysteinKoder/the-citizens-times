@@ -24,7 +24,8 @@ const Header = () => {
         </div>
         <div className="flex flex-row items-center justify-end flex-none space-x-2">
           <p>Post</p>
-          <button className="btn btn-square btn-ghost">
+
+          <a href="/post-news" className="btn btn-square btn-ghost">
             <svg
               class="w-6 h-6 text-gray-800 dark:text-white"
               aria-hidden="true"
@@ -42,7 +43,7 @@ const Header = () => {
                 d="M5 12h14m-7 7V5"
               />
             </svg>
-          </button>
+          </a>
         </div>
       </div>
     </header>

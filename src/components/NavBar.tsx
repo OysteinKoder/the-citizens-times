@@ -6,7 +6,9 @@ const NavBar = () => {
         <a className="link link-hover">National</a>
         <a className="link link-hover">Regional</a>
         <a className="link link-hover">Sports</a>
-        <a className="link link-hover">Humor</a>
+        <a href="/humor-news" className="link link-hover">
+          Humor
+        </a>
       </nav>
     </div>
   );

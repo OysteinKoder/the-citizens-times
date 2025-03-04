@@ -1,29 +1,22 @@
 import "./app.css";
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
-import HeadlineNewsCard from "./components/HeadlineNewsCard";
-import SubNewsCard from "./components/SubNewsCard";
+import HumorPage from "./pages/HumorPage";
 import PostForm from "./components/PostForm";
+import { LocationProvider, ErrorBoundary, Router, Route } from "preact-iso";
 
-// As of now all components are rendered in app.js,
-// will be moved to appropriate pages later
-
-// Todo shortlist:
-// Add routing
-// Add category pages
-
-// Todo Longlist:
-// Add backend
-// Make sorting algorytm, similar to reddit
-// - Hot, new, top (by date perhaps, 1 day, 1 week, 1 month, 1 year, all time.)
 export function App() {
   return (
-    <>
-      <Header />
-      <NavBar />
-      <HeadlineNewsCard />
-      <SubNewsCard />
-      <PostForm />
-    </>
+    <LocationProvider>
+      <ErrorBoundary>
+        <Header />
+        <NavBar />
+        <Router>
+          <Route path="/humor-news" component={HumorPage} />
+          <Route path="/humor-news" component={HumorPage} />
+          <Route path="/post-news" component={PostForm} />
+        </Router>
+      </ErrorBoundary>
+    </LocationProvider>
   );
 }
