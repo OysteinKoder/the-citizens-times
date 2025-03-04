@@ -23,7 +23,7 @@ const SubNewsCard = () => {
               />
             </figure>
             <div className="p-2 w-2/3">
-              <h2 className="sm:font-semibold md:font-extrabold">
+              <h2 className="sm:font-semibold md:font-extrabold p-4">
                 {data.title}
               </h2>
               {isAd && (
