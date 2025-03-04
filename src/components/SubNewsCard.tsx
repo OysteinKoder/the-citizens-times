@@ -13,7 +13,7 @@ const SubNewsCard = () => {
         return (
           <div
             key={index}
-            className="flex flex-row-reverse bg-base-100 shadow-xl mt-4 md:mt-10 md:pt-2"
+            className="flex flex-row-reverse  bg-base-100 shadow-xl mt-4 md:mt-10"
           >
             <figure className="flex justify-center align-center md:h-60 w-1/3">
               <img
@@ -22,7 +22,7 @@ const SubNewsCard = () => {
                 className="object-cover w-full"
               />
             </figure>
-            <div className="p-2 w-2/3">
+            <div className=" w-2/3">
               <h2 className="sm:font-semibold md:font-extrabold p-4">
                 {data.title}
               </h2>
