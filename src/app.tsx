@@ -12,7 +12,7 @@ export function App() {
         <Header />
         <NavBar />
         <Router>
-          <Route path="/humor-news" component={HumorPage} />
+          <Route default component={HumorPage} />
           <Route path="/humor-news" component={HumorPage} />
           <Route path="/post-news" component={PostForm} />
         </Router>

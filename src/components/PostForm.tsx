@@ -2,9 +2,13 @@ import { formState } from "../state/globalState";
 formState;
 
 const PostForm = () => {
+  const saveState = (key: string, value: any) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
   const handleSubmit = (e: Event) => {
     e.preventDefault();
     // Handle form submission
+    console.log("Form submitted:", formState.value);
   };
 
   const handleTagInput = (e: Event) => {
@@ -19,8 +23,14 @@ const PostForm = () => {
   };
 
   const removeTag = (index: number) => {
-    formState.value.tags = formState.value.tags.filter((_, i) => i !== index);
+    formState.value.tags = formState.value.tags.filter(
+      (_: any, i: any) => i !== index
+    );
   };
+
+  formState.subscribe(() => {
+    saveState("formState", formState.value);
+  });
 
   return (
     <form
@@ -35,9 +45,10 @@ const PostForm = () => {
           type="text"
           id="title"
           value={formState.value.title}
-          onInput={(e) =>
-            (formState.value.title = (e.target as HTMLInputElement).value)
-          }
+          onInput={(e) => {
+            formState.value.title = (e.target as HTMLInputElement).value;
+            saveState("formState", formState.value);
+          }}
           class="input input-bordered w-full"
         />
       </div>
@@ -48,10 +59,11 @@ const PostForm = () => {
         <input
           type="file"
           id="mainPicture"
-          onChange={(e) =>
-            (formState.value.mainPicture =
-              (e.target as HTMLInputElement).files?.[0] || null)
-          }
+          onChange={(e) => {
+            formState.value.mainPicture =
+              (e.target as HTMLInputElement).files?.[0] || null;
+            saveState("formState", formState.value);
+          }}
           class="file-input w-full"
         />
       </div>
@@ -78,9 +90,10 @@ const PostForm = () => {
         <textarea
           id="text"
           value={formState.value.text}
-          onInput={(e) =>
-            (formState.value.text = (e.target as HTMLTextAreaElement).value)
-          }
+          onInput={(e) => {
+            formState.value.text = (e.target as HTMLTextAreaElement).value;
+            saveState("formState", formState.value);
+          }}
           class="textarea textarea-bordered w-full"
         ></textarea>
       </div>
@@ -96,7 +109,7 @@ const PostForm = () => {
           placeholder="Press Enter to add tags"
         />
         <div class="mt-2">
-          {formState.value.tags.map((tag, index) => (
+          {formState.value.tags.map((tag: [], index: any) => (
             <span class="badge badge-primary mr-2 mb-2" key={index}>
               {tag}
               <button
@@ -112,7 +125,7 @@ const PostForm = () => {
       </div>
       <p>Tags Added:</p>
       <div className="flex row">
-        {formState.value.tags.map((tag, idx) => {
+        {formState.value.tags.map((tag: [], idx: any) => {
           <p key={idx}>{tag}</p>;
         })}
       </div>
