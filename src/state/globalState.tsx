@@ -95,6 +95,7 @@ const saveState = (key: string, value: any) => {
 export const formState = signal(
   loadState("formState", {
     title: "",
+    ingress: "",
     mainPicture: null as File | null,
     pictures: [] as File[],
     text: "",

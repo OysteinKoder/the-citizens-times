@@ -38,7 +38,7 @@ const PostForm = () => {
       class="form-control w-full max-w-lg mx-auto p-4"
     >
       <div class="mb-4">
-        <label for="title" class="label">
+        <label for="Title" class="label">
           <span class="label-text">Title:</span>
         </label>
         <input
@@ -47,6 +47,21 @@ const PostForm = () => {
           value={formState.value.title}
           onInput={(e) => {
             formState.value.title = (e.target as HTMLInputElement).value;
+            saveState("formState", formState.value);
+          }}
+          class="input input-bordered w-full"
+        />
+      </div>
+      <div class="mb-4">
+        <label for="Ingress" class="label">
+          <span class="label-text">Ingress</span>
+        </label>
+        <input
+          type="text"
+          id="Ingress"
+          value={formState.value.ingress}
+          onInput={(e) => {
+            formState.value.ingress = (e.target as HTMLInputElement).value;
             saveState("formState", formState.value);
           }}
           class="input input-bordered w-full"
