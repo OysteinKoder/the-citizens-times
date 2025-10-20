@@ -1,4 +1,10 @@
+import { supabase } from "../supa-base-client";
+
 const Header = () => {
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    console.log(error);
+  }
   return (
     <header>
       <div className="drawer">
@@ -27,7 +33,9 @@ const Header = () => {
                 </svg>
               </label>
               <div className="flex-1 text-left">
-                <a className="btn btn-ghost text-xl ">TCT</a>
+                <a className="btn btn-ghost text-xl " href={"/humor-news"}>
+                  TCT
+                </a>
               </div>
             </div>
             <div className="flex lg:block">
@@ -71,7 +79,7 @@ const Header = () => {
           <ul className="menu bg-base-200 min-h-full w-80 p-4">
             {/* Sidebar content here */}
             <li>
-              <a>Sidebar Item 1</a>
+              <span onClick={signOut}>Sign out</span>
             </li>
             <li>
               <a>Sidebar Item 2</a>
