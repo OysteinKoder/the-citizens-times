@@ -68,7 +68,6 @@ const Header = () => {
             </div>
           </div>
           {/* Page content here */}
-          Content
         </div>
         <div className="drawer-side">
           <label
