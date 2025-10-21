@@ -1,7 +1,11 @@
 import { formState } from "../state/globalState";
+import { signal } from "@preact/signals";
 formState;
 
 const PostForm = () => {
+  // Local signal to force re-render
+  const refresh = signal(0);
+
   const saveState = (key: string, value: any) => {
     localStorage.setItem(key, JSON.stringify(value));
   };
@@ -17,15 +21,19 @@ const PostForm = () => {
       const input = e.target as HTMLInputElement;
       if (input.value.trim()) {
         formState.value.tags = [...formState.value.tags, input.value.trim()];
+        saveState("formState", formState.value);
         input.value = "";
+        refresh.value++; // trigger re-render
       }
     }
   };
 
-  const removeTag = (index: number) => {
+  const removeTag = (idx: number) => {
     formState.value.tags = formState.value.tags.filter(
-      (_: any, i: any) => i !== index
+      (_: any, i: any) => i !== idx
     );
+    saveState("formState", formState.value);
+    refresh.value++; // trigger re-render
   };
 
   formState.subscribe(() => {
@@ -124,26 +132,19 @@ const PostForm = () => {
           placeholder="Press Enter to add tags"
         />
         <div class="mt-2">
-          {formState.value.tags.map((tag: [], index: any) => (
-            <span class="badge badge-primary mr-2 mb-2" key={index}>
+          {/* Use refresh.value to trigger re-render */}
+          <span class="invisible">{refresh.value}</span>
+          {formState.value.tags.map((tag: string, idx: any) => (
+            <span class="badge badge-primary mr-2 mb-2" key={idx}>
               {tag}
-              <button
-                type="button"
-                class="ml-1"
-                onClick={() => removeTag(index)}
-              >
+              <button type="button" class="ml-1" onClick={() => removeTag(idx)}>
                 &times;
               </button>
             </span>
           ))}
         </div>
       </div>
-      <p>Tags Added:</p>
-      <div className="flex row">
-        {formState.value.tags.map((tag: [], idx: any) => {
-          <p key={idx}>{tag}</p>;
-        })}
-      </div>
+
       <button type="submit" class="btn btn-primary w-full">
         Submit
       </button>
