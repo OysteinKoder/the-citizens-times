@@ -6,6 +6,9 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { LandingPage } from "./pages/LandingPage";
 import { supabase } from "./supa-base-client";
 import { Session } from "@supabase/supabase-js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -23,6 +26,10 @@ export default function App() {
   if (!session) {
     return <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />;
   } else {
-    return <LandingPage />;
+    return (
+      <QueryClientProvider client={queryClient}>
+        <LandingPage />
+      </QueryClientProvider>
+    );
   }
 }

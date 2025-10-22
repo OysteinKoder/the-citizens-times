@@ -1,18 +1,57 @@
 import { formState } from "../state/globalState";
 import { signal } from "@preact/signals";
+import { useMutation } from "@tanstack/react-query";
+import { supabase } from "../supa-base-client";
+import { useState } from "preact/hooks";
 formState;
+
+interface PostInput {
+  title: string;
+  ingress: string;
+  main_text: string;
+  keywords: string;
+  country: string;
+  image: string;
+}
+
+const createPost = async (post: PostInput) => {
+  const { data, error } = await supabase.from("Posts").insert([post]);
+  if (error) throw new Error(error.message);
+  return data;
+};
 
 const PostForm = () => {
   // Local signal to force re-render
   const refresh = signal(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const saveState = (key: string, value: any) => {
     localStorage.setItem(key, JSON.stringify(value));
   };
+
+  const { mutate } = useMutation({
+    mutationFn: createPost,
+    onError: (error: any) => {
+      setErrorMsg(error.message);
+    },
+    onSuccess: () => {
+      setErrorMsg(null);
+    },
+  });
+
   const handleSubmit = (e: Event) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formState.value);
+    // Map formState to PostInput
+    const post: PostInput = {
+      title: formState.value.title || "",
+      ingress: formState.value.ingress || "",
+      main_text: formState.value.text || "",
+      keywords: formState.value.tags ? formState.value.tags.join(",") : "",
+      country: "", // You can add a country input to your form if needed
+      image: formState.value.mainPicture?.name || "", // Or handle image upload separately
+    };
+    mutate(post);
+    console.log("Form submitted:", post);
   };
 
   const handleTagInput = (e: Event) => {
@@ -144,7 +183,7 @@ const PostForm = () => {
           ))}
         </div>
       </div>
-
+      {errorMsg && <div class="alert alert-error mb-4">{errorMsg}</div>}
       <button type="submit" class="btn btn-primary w-full">
         Submit
       </button>
