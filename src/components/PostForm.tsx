@@ -12,6 +12,7 @@ interface PostInput {
   keywords: string;
   country: string;
   image: string;
+  user_id: string;
 }
 
 const createPost = async (post: PostInput) => {
@@ -24,6 +25,14 @@ const PostForm = () => {
   // Local signal to force re-render
   const refresh = signal(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string>("");
+
+  // Get current user id from supabase on mount
+  useState(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user?.id) setUserId(data.user.id);
+    });
+  });
 
   const saveState = (key: string, value: any) => {
     localStorage.setItem(key, JSON.stringify(value));
@@ -39,19 +48,56 @@ const PostForm = () => {
     },
   });
 
+  // Set default country if not set
+  if (!formState.value.country) {
+    formState.value.country = "USA";
+  }
+
+  // Helper to validate image URL with regex for Unsplash, Pexels, or Pixabay
+  const isValidImageUrl = (url: string) => {
+    const unsplashRegex = /^https:\/\/images\.unsplash\.com\/.+/;
+    const pexelsRegex = /^https:\/\/www\.pexels\.com\/photo\/.+/;
+    const pixabayRegex = /^https:\/\/cdn\.pixabay\.com\/.+/;
+    return (
+      unsplashRegex.test(url) || pexelsRegex.test(url) || pixabayRegex.test(url)
+    );
+  };
+
   const handleSubmit = (e: Event) => {
-    e.preventDefault();
-    // Map formState to PostInput
-    const post: PostInput = {
-      title: formState.value.title || "",
-      ingress: formState.value.ingress || "",
-      main_text: formState.value.text || "",
-      keywords: formState.value.tags ? formState.value.tags.join(",") : "",
-      country: "", // You can add a country input to your form if needed
-      image: formState.value.mainPicture?.name || "", // Or handle image upload separately
-    };
-    mutate(post);
-    console.log("Form submitted:", post);
+    if (formState.value.tags) {
+      e.preventDefault();
+      // Validate image URL
+      if (
+        formState.value.mainPicture &&
+        !isValidImageUrl(formState.value.mainPicture)
+      ) {
+        setErrorMsg(
+          "Image URL must be from Unsplash (images.unsplash.com), Pexels (www.pexels.com/photo/...), or Pixabay (cdn.pixabay.com)."
+        );
+        return;
+      }
+      const post: PostInput = {
+        title: formState.value.title || "",
+        ingress: formState.value.ingress || "",
+        main_text: formState.value.text || "",
+        keywords: formState.value.tags ? formState.value.tags.join(",") : "",
+        country: formState.value.country || "USA",
+        image: formState.value.mainPicture || "",
+        user_id: userId,
+      };
+      mutate(post);
+      console.log("Form submitted:", post);
+      console.log("current state", formState);
+      formState.value.title = "";
+      formState.value.ingress = "";
+      formState.value.text = "";
+      formState.value.mainPicture = "";
+      formState.value.pictures = "";
+      formState.value.tags = "";
+      refresh.value++;
+    } else {
+      alert("Please enter tags");
+    }
   };
 
   const handleTagInput = (e: Event) => {
@@ -86,9 +132,10 @@ const PostForm = () => {
     >
       <div class="mb-4">
         <label for="Title" class="label">
-          <span class="label-text">Title:</span>
+          <span class="label-text">Title</span>
         </label>
         <input
+          required
           type="text"
           id="title"
           value={formState.value.title}
@@ -96,7 +143,7 @@ const PostForm = () => {
             formState.value.title = (e.target as HTMLInputElement).value;
             saveState("formState", formState.value);
           }}
-          class="input input-bordered w-full"
+          class="input input-bordered w-full text-center"
         />
       </div>
       <div class="mb-4">
@@ -104,6 +151,7 @@ const PostForm = () => {
           <span class="label-text">Ingress</span>
         </label>
         <input
+          required
           type="text"
           id="Ingress"
           value={formState.value.ingress}
@@ -111,76 +159,130 @@ const PostForm = () => {
             formState.value.ingress = (e.target as HTMLInputElement).value;
             saveState("formState", formState.value);
           }}
-          class="input input-bordered w-full"
+          class="input input-bordered w-full text-center"
         />
       </div>
-      <div class="mb-4">
-        <label for="mainPicture" class="label">
-          <span class="label-text">Main Picture:</span>
-        </label>
-        <input
-          type="file"
-          id="mainPicture"
-          onChange={(e) => {
-            formState.value.mainPicture =
-              (e.target as HTMLInputElement).files?.[0] || null;
-            saveState("formState", formState.value);
-          }}
-          class="file-input w-full"
-        />
-      </div>
-      <div class="mb-4">
-        <label for="pictures" class="label">
-          <span class="label-text">Pictures:</span>
-        </label>
-        <input
-          type="file"
-          id="pictures"
-          multiple
-          onChange={(e) =>
-            (formState.value.pictures = Array.from(
-              (e.target as HTMLInputElement).files || []
-            ))
-          }
-          class="file-input w-full"
-        />
-      </div>
+
       <div class="mb-4">
         <label for="text" class="label">
-          <span class="label-text">Text:</span>
+          <span class="label-text">Text</span>
         </label>
         <textarea
+          required
           id="text"
           value={formState.value.text}
           onInput={(e) => {
             formState.value.text = (e.target as HTMLTextAreaElement).value;
             saveState("formState", formState.value);
           }}
-          class="textarea textarea-bordered w-full"
+          class="textarea textarea-bordered w-full h-30 text-center"
         ></textarea>
       </div>
       <div class="mb-4">
         <label for="tags" class="label">
-          <span class="label-text">Tags:</span>
+          <span class="label-text">Tags</span>
         </label>
         <input
           type="text"
           id="tags"
           onKeyDown={handleTagInput}
-          class="input input-bordered w-full"
+          class="input input-bordered w-full text-center"
           placeholder="Press Enter to add tags"
         />
         <div class="mt-2">
           {/* Use refresh.value to trigger re-render */}
           <span class="invisible">{refresh.value}</span>
-          {formState.value.tags.map((tag: string, idx: any) => (
-            <span class="badge badge-primary mr-2 mb-2" key={idx}>
-              {tag}
-              <button type="button" class="ml-1" onClick={() => removeTag(idx)}>
-                &times;
-              </button>
-            </span>
-          ))}
+          {formState.value.tags
+            ? formState.value.tags.map((tag: string, idx: number) => (
+                <span class="badge badge-primary mr-2 mb-2" key={idx}>
+                  {tag}
+                  <button
+                    type="button"
+                    class="ml-1"
+                    onClick={() => removeTag(idx)}
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))
+            : null}
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="country" class="label">
+          <span class="label-text">Country</span>
+        </label>
+        <select
+          id="country"
+          value={formState.value.country}
+          onChange={(e) => {
+            formState.value.country = (e.target as HTMLSelectElement).value;
+            saveState("formState", formState.value);
+            refresh.value++;
+          }}
+          class="select select-bordered w-full text-center"
+        >
+          <option value="USA">USA</option>
+          <option value="Australia">Australia</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">England</option>
+          <option value="Australia">Scotland</option>
+          <option value="Australia">Ireland</option>
+          <option value="Australia">Norway</option>
+          <option value="Australia">Germany</option>
+          <option value="Australia">Other</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="mainPicture" class="label">
+          <span class="label-text">Img url</span>
+        </label>
+        <input
+          type="text"
+          id="mainPicture"
+          onInput={(e) => {
+            formState.value.mainPicture = (e.target as HTMLInputElement).value;
+            saveState("formState", formState.value);
+          }}
+          class="file-input w-full text-center"
+          placeholder="Paste image url"
+          pattern="^(https:\/\/images\.unsplash\.com\/.+|https:\/\/www\.pexels\.com\/photo\/.+|https:\/\/cdn\.pixabay\.com\/.+)$"
+          title="Only image URLs from Unsplash, Pexels, or Pixabay are allowed. Remember to right click and open image in new tab to get the accepted source"
+          required
+        />
+
+        <div class="text-center text-xs text-gray-400 mt-2">
+          <span>Only image URLs from </span>
+          <div class="flex justify-center gap-2 mt-1 mb-1 text-xs">
+            <a
+              href="https://unsplash.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link link-hover text-gray-500"
+            >
+              Unsplash
+            </a>
+            <span>|</span>
+            <a
+              href="https://www.pexels.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link link-hover text-gray-500"
+            >
+              Pexels
+            </a>
+            <span>|</span>
+            <a
+              href="https://pixabay.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link link-hover text-gray-500"
+            >
+              Pixabay
+            </a>
+          </div>
+          <span> are allowed at the moment.</span>
         </div>
       </div>
       {errorMsg && <div class="alert alert-error mb-4">{errorMsg}</div>}
