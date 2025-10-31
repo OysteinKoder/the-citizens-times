@@ -12,7 +12,6 @@ interface PostInput {
   keywords: string;
   country: string;
   image: string;
-  user_id: string;
 }
 
 const createPost = async (post: PostInput) => {
@@ -25,14 +24,6 @@ const PostForm = () => {
   // Local signal to force re-render
   const refresh = signal(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string>("");
-
-  // Get current user id from supabase on mount
-  useState(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data?.user?.id) setUserId(data.user.id);
-    });
-  });
 
   const saveState = (key: string, value: any) => {
     localStorage.setItem(key, JSON.stringify(value));
@@ -83,7 +74,6 @@ const PostForm = () => {
         keywords: formState.value.tags ? formState.value.tags.join(",") : "",
         country: formState.value.country || "USA",
         image: formState.value.mainPicture || "",
-        user_id: userId,
       };
       mutate(post);
       console.log("Form submitted:", post);
