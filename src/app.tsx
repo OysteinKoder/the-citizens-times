@@ -24,7 +24,13 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
   if (!session) {
-    return <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />;
+    return (
+      <Auth
+        supabaseClient={supabase}
+        appearance={{ theme: ThemeSupa }}
+        providers={["google", "facebook", "github"]}
+      />
+    );
   } else {
     return (
       <QueryClientProvider client={queryClient}>
