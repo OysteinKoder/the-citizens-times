@@ -6,6 +6,7 @@ Uses following libraries
 framework/library: Preact
 
 css: Tailwind Css
+emoji: https://heroicons.com/
 css library: Daisy Ui for components
 https://tailwindcss.com/docs/installation/using-vite
 https://daisyui.com/

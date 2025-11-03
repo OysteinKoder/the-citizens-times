@@ -83,10 +83,26 @@ export const MockAdsData = signal([
   },
 ]);
 
-export const formState = signal({
-  title: "",
-  mainPicture: null as File | null,
-  pictures: [] as File[],
-  text: "",
-  tags: [] as string[],
+const loadState = (key: string, defaultValue: any) => {
+  const storedValue = localStorage.getItem(key);
+  return storedValue ? JSON.parse(storedValue) : defaultValue;
+};
+
+const saveState = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+
+export const formState = signal(
+  loadState("formState", {
+    title: "",
+    ingress: "",
+    mainPicture: null as File | null,
+    pictures: [] as File[],
+    text: "",
+    tags: [] as string[],
+  })
+);
+
+formState.subscribe(() => {
+  saveState("formState", formState.value);
 });
