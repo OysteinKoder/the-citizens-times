@@ -116,11 +116,13 @@ const PostForm = () => {
   });
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      class="form-control w-full max-w-lg mx-auto p-4"
-    >
-      <div class="mb-4">
+    <>
+      <h1 class="sr-only">Post News Story form</h1>
+      <form
+        onSubmit={handleSubmit}
+        class="form-control w-full max-w-lg mx-auto p-4"
+      >
+        {/* Title Input */}
         <label for="Title" class="label">
           <span class="label-text">Title</span>
         </label>
@@ -129,14 +131,13 @@ const PostForm = () => {
           type="text"
           id="title"
           value={formState.value.title}
+          class="input input-bordered w-full text-center mb-4"
           onInput={(e) => {
             formState.value.title = (e.target as HTMLInputElement).value;
             saveState("formState", formState.value);
           }}
-          class="input input-bordered w-full text-center"
         />
-      </div>
-      <div class="mb-4">
+        {/* Ingress Input*/}
         <label for="Ingress" class="label">
           <span class="label-text">Ingress</span>
         </label>
@@ -149,11 +150,9 @@ const PostForm = () => {
             formState.value.ingress = (e.target as HTMLInputElement).value;
             saveState("formState", formState.value);
           }}
-          class="input input-bordered w-full text-center"
+          class="input input-bordered w-full text-center mb-4"
         />
-      </div>
-
-      <div class="mb-4">
+        {/* Text Input */}
         <label for="text" class="label">
           <span class="label-text">Text</span>
         </label>
@@ -165,10 +164,9 @@ const PostForm = () => {
             formState.value.text = (e.target as HTMLTextAreaElement).value;
             saveState("formState", formState.value);
           }}
-          class="textarea textarea-bordered w-full h-30 text-center"
+          class="textarea textarea-bordered w-full h-30 text-center mb-4"
         ></textarea>
-      </div>
-      <div class="mb-4">
+        {/* Tags Input */}
         <label for="tags" class="label">
           <span class="label-text">Tags</span>
         </label>
@@ -179,8 +177,8 @@ const PostForm = () => {
           class="input input-bordered w-full text-center"
           placeholder="Press Enter to add tags"
         />
-        <div class="mt-2">
-          {/* Use refresh.value to trigger re-render */}
+        <div class="mt-2 mb-4">
+          {/* Use refresh.value to trigger re-render so that tag becomes visible after enter is hit */}
           <span class="invisible">{refresh.value}</span>
           {formState.value.tags
             ? formState.value.tags.map((tag: string, idx: number) => (
@@ -197,9 +195,7 @@ const PostForm = () => {
               ))
             : null}
         </div>
-      </div>
-
-      <div class="mb-4">
+        {/* country selector */}
         <label for="country" class="label">
           <span class="label-text">Country</span>
         </label>
@@ -211,7 +207,7 @@ const PostForm = () => {
             saveState("formState", formState.value);
             refresh.value++;
           }}
-          class="select select-bordered w-full text-center -z-10"
+          class="select select-bordered w-full text-center -z-10 mb-4"
         >
           <option value="USA">USA</option>
           <option value="Australia">Australia</option>
@@ -223,8 +219,7 @@ const PostForm = () => {
           <option value="Australia">Germany</option>
           <option value="Australia">Other</option>
         </select>
-      </div>
-      <div class="mb-4">
+        {/* Image Url Input */}
         <label for="mainPicture" class="label">
           <span class="label-text">Img url</span>
         </label>
@@ -241,8 +236,7 @@ const PostForm = () => {
           title="Only image URLs from Unsplash, Pexels, or Pixabay are allowed. Remember to right click and open image in new tab to get the accepted source"
           required
         />
-
-        <div class="text-center text-xs text-gray-400 mt-2">
+        <div class="text-center text-xs text-gray-400 mt-2 mb-4">
           <span>Only image URLs from </span>
           <div class="flex justify-center gap-2 mt-1 mb-1 text-xs">
             <a
@@ -274,21 +268,21 @@ const PostForm = () => {
           </div>
           <span> are allowed at the moment.</span>
         </div>
-      </div>
-      {errorMsg && <div class="alert alert-error mb-4">{errorMsg}</div>}
-      <button type="submit" class="btn btn-primary w-full">
-        Submit
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary w-full"
-        onClick={() => {
-          console.log(formState.value);
-        }}
-      >
-        console.log
-      </button>
-    </form>
+        {errorMsg && <div class="alert alert-error mb-4">{errorMsg}</div>}
+        <button type="submit" class="btn btn-primary w-full">
+          Submit
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary w-full"
+          onClick={() => {
+            console.log(formState.value);
+          }}
+        >
+          console.log
+        </button>
+      </form>
+    </>
   );
 };
 
