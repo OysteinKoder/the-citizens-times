@@ -211,7 +211,7 @@ const PostForm = () => {
             saveState("formState", formState.value);
             refresh.value++;
           }}
-          class="select select-bordered w-full text-center"
+          class="select select-bordered w-full text-center -z-10"
         >
           <option value="USA">USA</option>
           <option value="Australia">Australia</option>
