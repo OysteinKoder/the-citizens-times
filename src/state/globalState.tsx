@@ -92,7 +92,7 @@ const saveState = (key: string, value: any) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const formState = signal(
+export const postFormSignal = signal(
   loadState("formState", {
     title: "",
     ingress: "",
@@ -103,6 +103,21 @@ export const formState = signal(
   })
 );
 
-formState.subscribe(() => {
-  saveState("formState", formState.value);
+postFormSignal.subscribe(() => {
+  saveState("formState", postFormSignal.value);
+});
+
+export const userInfoSignal = signal(
+  loadState("userInfoSignal", {
+    first_name: "",
+    last_name: "",
+    birth_date: "",
+    country: "",
+    gender: "",
+    interests: "",
+  })
+);
+
+userInfoSignal.subscribe(() => {
+  saveState("userInfoSignal", userInfoSignal.value);
 });

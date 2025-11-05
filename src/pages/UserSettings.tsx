@@ -7,6 +7,7 @@ const UserSettings = () => {
     birth_date: string | null;
     country: string;
     gender: "male" | "female" | "other";
+    interests: string;
   }
 
   return (

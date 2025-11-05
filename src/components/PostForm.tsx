@@ -1,9 +1,9 @@
-import { formState } from "../state/globalState";
+import { postFormSignal } from "../state/globalState";
 import { signal } from "@preact/signals";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "../supa-base-client";
 import { useState } from "preact/hooks";
-formState;
+postFormSignal;
 
 interface PostInput {
   title: string;
@@ -40,8 +40,8 @@ const PostForm = () => {
   });
 
   // Set default country if not set
-  if (!formState.value.country) {
-    formState.value.country = "USA";
+  if (!postFormSignal.value.country) {
+    postFormSignal.value.country = "USA";
   }
 
   // Helper to validate image URL with regex for Unsplash, Pexels, or Pixabay
@@ -55,12 +55,12 @@ const PostForm = () => {
   };
 
   const handleSubmit = (e: Event) => {
-    if (formState.value.tags) {
+    if (postFormSignal.value.tags) {
       e.preventDefault();
       // Validate image URL
       if (
-        formState.value.mainPicture &&
-        !isValidImageUrl(formState.value.mainPicture)
+        postFormSignal.value.mainPicture &&
+        !isValidImageUrl(postFormSignal.value.mainPicture)
       ) {
         setErrorMsg(
           "Image URL must be from Unsplash (images.unsplash.com), Pexels (www.pexels.com/photo/...), or Pixabay (cdn.pixabay.com)."
@@ -68,22 +68,24 @@ const PostForm = () => {
         return;
       }
       const post: PostInput = {
-        title: formState.value.title || "",
-        ingress: formState.value.ingress || "",
-        main_text: formState.value.text || "",
-        keywords: formState.value.tags ? formState.value.tags.join(",") : "",
-        country: formState.value.country || "USA",
-        image: formState.value.mainPicture || "",
+        title: postFormSignal.value.title || "",
+        ingress: postFormSignal.value.ingress || "",
+        main_text: postFormSignal.value.text || "",
+        keywords: postFormSignal.value.tags
+          ? postFormSignal.value.tags.join(",")
+          : "",
+        country: postFormSignal.value.country || "USA",
+        image: postFormSignal.value.mainPicture || "",
       };
       mutate(post);
       console.log("Form submitted:", post);
-      console.log("current state", formState);
-      formState.value.title = "";
-      formState.value.ingress = "";
-      formState.value.text = "";
-      formState.value.mainPicture = "";
-      formState.value.pictures = "";
-      formState.value.tags = "";
+      console.log("current state", postFormSignal);
+      postFormSignal.value.title = "";
+      postFormSignal.value.ingress = "";
+      postFormSignal.value.text = "";
+      postFormSignal.value.mainPicture = "";
+      postFormSignal.value.pictures = "";
+      postFormSignal.value.tags = "";
       refresh.value++;
     } else {
       alert("Please enter tags");
@@ -95,8 +97,11 @@ const PostForm = () => {
       e.preventDefault();
       const input = e.target as HTMLInputElement;
       if (input.value.trim()) {
-        formState.value.tags = [...formState.value.tags, input.value.trim()];
-        saveState("formState", formState.value);
+        postFormSignal.value.tags = [
+          ...postFormSignal.value.tags,
+          input.value.trim(),
+        ];
+        saveState("formState", postFormSignal.value);
         input.value = "";
         refresh.value++; // trigger re-render
       }
@@ -104,15 +109,15 @@ const PostForm = () => {
   };
 
   const removeTag = (idx: number) => {
-    formState.value.tags = formState.value.tags.filter(
+    postFormSignal.value.tags = postFormSignal.value.tags.filter(
       (_: any, i: any) => i !== idx
     );
-    saveState("formState", formState.value);
+    saveState("formState", postFormSignal.value);
     refresh.value++; // trigger re-render
   };
 
-  formState.subscribe(() => {
-    saveState("formState", formState.value);
+  postFormSignal.subscribe(() => {
+    saveState("formState", postFormSignal.value);
   });
 
   return (
@@ -130,11 +135,11 @@ const PostForm = () => {
           required
           type="text"
           id="title"
-          value={formState.value.title}
+          value={postFormSignal.value.title}
           class="input input-bordered w-full text-center mb-4"
           onInput={(e) => {
-            formState.value.title = (e.target as HTMLInputElement).value;
-            saveState("formState", formState.value);
+            postFormSignal.value.title = (e.target as HTMLInputElement).value;
+            saveState("formState", postFormSignal.value);
           }}
         />
         {/* Ingress Input*/}
@@ -145,10 +150,10 @@ const PostForm = () => {
           required
           type="text"
           id="Ingress"
-          value={formState.value.ingress}
+          value={postFormSignal.value.ingress}
           onInput={(e) => {
-            formState.value.ingress = (e.target as HTMLInputElement).value;
-            saveState("formState", formState.value);
+            postFormSignal.value.ingress = (e.target as HTMLInputElement).value;
+            saveState("formState", postFormSignal.value);
           }}
           class="input input-bordered w-full text-center mb-4"
         />
@@ -159,10 +164,10 @@ const PostForm = () => {
         <textarea
           required
           id="text"
-          value={formState.value.text}
+          value={postFormSignal.value.text}
           onInput={(e) => {
-            formState.value.text = (e.target as HTMLTextAreaElement).value;
-            saveState("formState", formState.value);
+            postFormSignal.value.text = (e.target as HTMLTextAreaElement).value;
+            saveState("formState", postFormSignal.value);
           }}
           class="textarea textarea-bordered w-full h-30 text-center mb-4"
         ></textarea>
@@ -180,8 +185,8 @@ const PostForm = () => {
         <div class="mt-2 mb-4">
           {/* Use refresh.value to trigger re-render so that tag becomes visible after enter is hit */}
           <span class="invisible">{refresh.value}</span>
-          {formState.value.tags
-            ? formState.value.tags.map((tag: string, idx: number) => (
+          {postFormSignal.value.tags
+            ? postFormSignal.value.tags.map((tag: string, idx: number) => (
                 <span class="badge badge-primary mr-2 mb-2" key={idx}>
                   {tag}
                   <button
@@ -201,10 +206,12 @@ const PostForm = () => {
         </label>
         <select
           id="country"
-          value={formState.value.country}
+          value={postFormSignal.value.country}
           onChange={(e) => {
-            formState.value.country = (e.target as HTMLSelectElement).value;
-            saveState("formState", formState.value);
+            postFormSignal.value.country = (
+              e.target as HTMLSelectElement
+            ).value;
+            saveState("formState", postFormSignal.value);
             refresh.value++;
           }}
           class="select select-bordered w-full text-center -z-10 mb-4"
@@ -227,8 +234,10 @@ const PostForm = () => {
           type="text"
           id="mainPicture"
           onInput={(e) => {
-            formState.value.mainPicture = (e.target as HTMLInputElement).value;
-            saveState("formState", formState.value);
+            postFormSignal.value.mainPicture = (
+              e.target as HTMLInputElement
+            ).value;
+            saveState("formState", postFormSignal.value);
           }}
           class="file-input w-full text-center"
           placeholder="Paste image url"
@@ -276,7 +285,7 @@ const PostForm = () => {
           type="button"
           class="btn btn-secondary w-full"
           onClick={() => {
-            console.log(formState.value);
+            console.log(postFormSignal.value);
           }}
         >
           console.log
