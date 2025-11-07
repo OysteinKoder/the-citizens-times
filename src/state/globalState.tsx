@@ -88,7 +88,7 @@ const loadState = (key: string, defaultValue: any) => {
   return storedValue ? JSON.parse(storedValue) : defaultValue;
 };
 
-const saveState = (key: string, value: any) => {
+export const saveState = (key: string, value: any) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
