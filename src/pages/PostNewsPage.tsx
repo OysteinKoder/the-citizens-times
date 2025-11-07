@@ -20,7 +20,7 @@ const createPost = async (post: PostInput) => {
   return data;
 };
 
-const PostForm = () => {
+const PostNewsPage = () => {
   // Local signal to force re-render
   const refresh = signal(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -295,4 +295,4 @@ const PostForm = () => {
   );
 };
 
-export default PostForm;
+export default PostNewsPage;
