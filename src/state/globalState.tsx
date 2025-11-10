@@ -117,6 +117,8 @@ export const userInfoSignal = signal(
     last_name: "",
     birth_date: "",
     country: "",
+    state: "",
+    city: "",
     gender: "",
     interests: "",
   })
