@@ -1,23 +1,17 @@
-import { signal, effect } from "@preact/signals";
+import { computed } from "@preact/signals";
 import { postFormSignal, saveState } from "../../state/globalState";
 
-const MAX_INGRESS = 150;
+const MAX_CHAR = 250;
+const SHOW_COUNTER_AT = 215;
 
 export default function IngressInput() {
-  const charLength = signal(postFormSignal.value.ingress.length);
-  effect(() => {
-    charLength.value = postFormSignal.value.ingress.length;
-  });
-
-  const isNearLimit = signal(charLength.value > MAX_INGRESS * 0.9);
-  effect(() => {
-    isNearLimit.value = charLength.value > MAX_INGRESS * 0.9;
-  });
+  const charLength = computed(() => postFormSignal.value.ingress.length);
+  const showCounter = computed(() => charLength.value >= SHOW_COUNTER_AT);
 
   return (
     <>
-      <label htmlFor="ingress" className="label">
-        <span className="label-text">Ingress</span>
+      <label htmlFor="ingress" class="label">
+        <span class="label-text">Ingress</span>
       </label>
 
       <input
@@ -28,8 +22,7 @@ export default function IngressInput() {
         onInput={(e) => {
           const value = (e.target as HTMLInputElement).value;
 
-          // Enforce the limit in the state (maxlength already does it in the UI)
-          if (value.length <= MAX_INGRESS) {
+          if (value.length <= MAX_CHAR) {
             postFormSignal.value = {
               ...postFormSignal.value,
               ingress: value,
@@ -37,25 +30,24 @@ export default function IngressInput() {
             saveState("formState", postFormSignal.value);
           }
         }}
-        className="input input-bordered w-full text-center mb-2"
-        maxLength={MAX_INGRESS}
+        class="input input-bordered w-full text-center mb-2"
+        maxLength={MAX_CHAR}
       />
-      <div className="text-sm flex justify-end">
-        <span
-          className={
-            charLength.value > MAX_INGRESS
-              ? "text-error"
-              : isNearLimit.value
-              ? "text-warning"
-              : "text-success"
-          }
-        >
-          {charLength.value} / {MAX_INGRESS}
-        </span>
-        {charLength.value > MAX_INGRESS && (
-          <span className="text-error animate-pulse">Too long!</span>
-        )}
-      </div>
+
+      {/* Only shows when user types 215+ chars */}
+      {showCounter.value && (
+        <div class="text-sm flex justify-end animate-in slide-in-from-bottom duration-200">
+          <span
+            class={
+              charLength.value > MAX_CHAR * 0.9
+                ? "text-warning font-medium"
+                : "text-success"
+            }
+          >
+            {charLength.value} / {MAX_CHAR}
+          </span>
+        </div>
+      )}
     </>
   );
 }

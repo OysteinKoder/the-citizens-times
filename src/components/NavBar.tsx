@@ -1,12 +1,12 @@
 const NavBar = () => {
   return (
-    <div className="flex items-center text-sm">
-      <nav className="flex justify-around navbar">
-        <a className="link link-hover pt-0">World</a>
-        <a className="link link-hover">National</a>
-        <a className="link link-hover">Regional</a>
-        <a className="link link-hover">Sports</a>
-        <a href="/humor-news" className="link link-hover">
+    <div class="flex items-center text-sm">
+      <nav class="flex justify-around navbar">
+        <a class="link link-hover pt-0">World</a>
+        <a class="link link-hover">National</a>
+        <a class="link link-hover">Regional</a>
+        <a class="link link-hover">Sports</a>
+        <a href="/humor-news" class="link link-hover">
           Humor
         </a>
       </nav>

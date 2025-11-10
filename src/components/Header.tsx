@@ -27,27 +27,27 @@ const Header = () => {
   if (userData) {
     return (
       <header>
-        <div className="drawer">
+        <div class="drawer">
           <input
             id="my-drawer-2"
             type="checkbox"
-            className="drawer-toggle"
+            class="drawer-toggle"
             ref={drawerToggleRef}
           />
-          <div className="drawer-content flex flex-col justify-evenly">
+          <div class="drawer-content flex flex-col justify-evenly">
             {/* Navbar */}
-            <div className="navbar bg-base-300 w-full justify-between">
-              <div className="flex flex-row">
+            <div class="navbar bg-base-300 w-full justify-between">
+              <div class="flex flex-row">
                 <label
                   htmlFor="my-drawer-2"
                   aria-label="open sidebar"
-                  className="btn btn-square btn-ghost"
+                  class="btn btn-square btn-ghost"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    className="inline-block h-6 w-6 stroke-current"
+                    class="inline-block h-6 w-6 stroke-current"
                   >
                     <path
                       strokeLinecap="round"
@@ -57,9 +57,9 @@ const Header = () => {
                     ></path>
                   </svg>
                 </label>
-                <div className="flex-1 text-left">
+                <div class="flex-1 text-left">
                   <a
-                    className="btn btn-ghost text-xl "
+                    class="btn btn-ghost text-xl "
                     href={"/humor-news"}
                     onClick={closeDrawer}
                   >
@@ -67,13 +67,13 @@ const Header = () => {
                   </a>
                 </div>
               </div>
-              <div className="flex lg:block">
-                <ul className="menu menu-horizontal">
+              <div class="flex lg:block">
+                <ul class="menu menu-horizontal">
                   {/* Navbar menu content here */}
 
-                  <div className="flex flex-row items-center justify-end flex-none space-x-2 btn-ghost text-xl">
+                  <div class="flex flex-row items-center justify-end flex-none space-x-2 btn-ghost text-xl">
                     <p>Post</p>
-                    <a href="/post-news" className="btn btn-square">
+                    <a href="/post-news" class="btn btn-square">
                       <svg
                         class="w-6 h-6 text-gray-800 dark:text-white"
                         aria-hidden="true"
@@ -98,17 +98,17 @@ const Header = () => {
             </div>
             {/* Page content here */}
           </div>
-          <div className="drawer-side">
+          <div class="drawer-side">
             <label
               htmlFor="my-drawer-2"
               aria-label="close sidebar"
-              className="drawer-overlay"
+              class="drawer-overlay"
             ></label>
-            <ul className="menu bg-base-200 min-h-full w-80 p-4">
+            <ul class="menu bg-base-200 min-h-full w-80 p-4">
               {/* Sidebar content here */}
               <li>
                 <span onClick={signOut}>
-                  Sign out <span className="underline">{userData.email}</span>
+                  Sign out <span class="underline">{userData.email}</span>
                 </span>
               </li>
               <li>
@@ -120,7 +120,7 @@ const Header = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6"
+                    class="size-6"
                   >
                     <path
                       strokeLinecap="round"
@@ -143,27 +143,27 @@ const Header = () => {
   } else {
     return (
       <header>
-        <div className="drawer">
+        <div class="drawer">
           <input
             id="my-drawer-2"
             type="checkbox"
-            className="drawer-toggle"
+            class="drawer-toggle"
             ref={drawerToggleRef}
           />
-          <div className="drawer-content flex flex-col justify-evenly">
+          <div class="drawer-content flex flex-col justify-evenly">
             {/* Navbar */}
-            <div className="navbar bg-base-300 w-full justify-between">
-              <div className="flex flex-row">
+            <div class="navbar bg-base-300 w-full justify-between">
+              <div class="flex flex-row">
                 <label
                   htmlFor="my-drawer-2"
                   aria-label="open sidebar"
-                  className="btn btn-square btn-ghost"
+                  class="btn btn-square btn-ghost"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    className="inline-block h-6 w-6 stroke-current"
+                    class="inline-block h-6 w-6 stroke-current"
                   >
                     <path
                       strokeLinecap="round"
@@ -173,21 +173,21 @@ const Header = () => {
                     ></path>
                   </svg>
                 </label>
-                <div className="flex-1 text-left">
-                  <a className="btn btn-ghost text-xl " href={"/humor-news"}>
+                <div class="flex-1 text-left">
+                  <a class="btn btn-ghost text-xl " href={"/humor-news"}>
                     TCT
                   </a>
                 </div>
               </div>
-              <div className="flex lg:block">
-                <ul className="menu menu-horizontal">
+              <div class="flex lg:block">
+                <ul class="menu menu-horizontal">
                   {/* Navbar menu content here */}
 
-                  <div className="flex flex-row items-center justify-end flex-none space-x-2 btn-ghost text-xl">
+                  <div class="flex flex-row items-center justify-end flex-none space-x-2 btn-ghost text-xl">
                     <p>Post</p>
                     <a
                       href="/post-news"
-                      className="btn btn-square"
+                      class="btn btn-square"
                       onClick={closeDrawer}
                     >
                       <svg
@@ -214,13 +214,13 @@ const Header = () => {
             </div>
             {/* Page content here */}
           </div>
-          <div className="drawer-side">
+          <div class="drawer-side">
             <label
               htmlFor="my-drawer-2"
               aria-label="close sidebar"
-              className="drawer-overlay"
+              class="drawer-overlay"
             ></label>
-            <ul className="menu bg-base-200 min-h-full w-80 p-4">
+            <ul class="menu bg-base-200 min-h-full w-80 p-4">
               {/* Sidebar content here */}
               <li>
                 <span
