@@ -96,7 +96,7 @@ const PostNewsPage = () => {
       <h1 class="sr-only">Post News Story form</h1>
       <form
         onSubmit={handleSubmit}
-        class="form-control w-full max-w-lg mx-auto p-4"
+        class="form-control w-full max-w-2xl mx-auto p-4"
       >
         <TitleInput />
         <IngressInput />

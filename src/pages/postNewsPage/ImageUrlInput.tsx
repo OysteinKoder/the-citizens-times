@@ -15,6 +15,7 @@ const ImageUrlInput = () => {
           ).value;
           saveState("formState", postFormSignal.value);
         }}
+        value={postFormSignal.value.mainPicture}
         class="file-input w-full text-center"
         placeholder="Paste image url"
         pattern="^(https:\/\/images\.unsplash\.com\/.+|https:\/\/www\.pexels\.com\/photo\/.+|https:\/\/cdn\.pixabay\.com\/.+)$"

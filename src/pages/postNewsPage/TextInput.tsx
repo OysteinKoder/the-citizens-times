@@ -14,7 +14,7 @@ const TextInput = () => {
           postFormSignal.value.text = (e.target as HTMLTextAreaElement).value;
           saveState("formState", postFormSignal.value);
         }}
-        class="textarea textarea-bordered w-full h-30 text-center mb-4"
+        class="textarea textarea-bordered w-full lg:h-52 text-center mb-4"
       ></textarea>
     </>
   );
