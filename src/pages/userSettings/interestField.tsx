@@ -1,32 +1,49 @@
-import { signal } from "@preact/signals";
+import { computed } from "@preact/signals";
 import { userInfoSignal } from "../../state/globalState";
 
-const refresh = signal(0);
-const saveState = (key: string, value: any) =>
-  localStorage.setItem(key, JSON.stringify(value));
+const MAX_INTERESTS = 15;
+const SHOW_COUNTER_AT = 10;
 
 export default function InterestsField() {
+  // Ensure interests is always an array
+  if (!Array.isArray(userInfoSignal.value.interests)) {
+    userInfoSignal.value.interests = [];
+  }
+
+  const interests = computed(() => userInfoSignal.value.interests || []);
+  const interestCount = computed(() => interests.value.length);
+  const showCounter = computed(() => interestCount.value >= SHOW_COUNTER_AT);
+  const isNearLimit = computed(() => interestCount.value >= MAX_INTERESTS - 1);
+  const isAtLimit = computed(() => interestCount.value >= MAX_INTERESTS);
+
+  const saveState = (key: string, value: any) =>
+    localStorage.setItem(key, JSON.stringify(value));
+
   const removeTag = (idx: number) => {
-    userInfoSignal.value.interests = (
-      userInfoSignal.value.interests || []
-    ).filter((_: any, i: any) => i !== idx);
+    userInfoSignal.value = {
+      ...userInfoSignal.value,
+      interests: interests.value.filter((_: string, i: number) => i !== idx),
+    };
     saveState("userInfoSignal", userInfoSignal.value);
-    refresh.value++;
   };
 
   const handleInterestInput = (e: Event) => {
     if (e instanceof KeyboardEvent && e.key === "Enter") {
       e.preventDefault();
       const input = e.target as HTMLInputElement;
-      if (input.value.trim()) {
-        userInfoSignal.value.interests = [
-          ...(userInfoSignal.value.interests || []),
-          input.value.trim(),
-        ];
-        saveState("userInfoSignal", userInfoSignal.value);
+      const value = input.value.trim();
+
+      if (!value || isAtLimit.value) {
         input.value = "";
-        refresh.value++;
+        return;
       }
+
+      userInfoSignal.value = {
+        ...userInfoSignal.value,
+        interests: [...interests.value, value],
+      };
+      saveState("userInfoSignal", userInfoSignal.value);
+      input.value = "";
     }
   };
 
@@ -39,22 +56,41 @@ export default function InterestsField() {
         type="text"
         id="interests"
         onKeyDown={handleInterestInput}
-        class="input input-bordered w-full text-center"
-        placeholder="Press Enter to add tags"
+        class="input input-bordered w-full text-center mb-2"
+        placeholder="Effects what news we serve you"
+        disabled={isAtLimit.value}
       />
-      <div class="mt-2 mb-4">
-        <span class="invisible">{refresh.value}</span>
-        {(userInfoSignal.value.interests || []).map(
-          (interest: string, idx: number) => (
-            <span class="badge badge-primary mr-2 mb-2" key={idx}>
-              {interest}
-              <button type="button" class="ml-1" onClick={() => removeTag(idx)}>
-                &times;
-              </button>
-            </span>
-          )
-        )}
+
+      <div class="flex flex-wrap justify-center gap-2 mt-2 mb-1">
+        {interests.value.map((interest: string, idx: number) => (
+          <span
+            key={idx}
+            class="badge badge-primary flex items-center gap-1 px-2 py-1 text-xs"
+          >
+            {interest}
+            <button
+              type="button"
+              onClick={() => removeTag(idx)}
+              class="ml-1 text-xs font-bold hover:text-error"
+              aria-label="Remove interest"
+            >
+              &times;
+            </button>
+          </span>
+        ))}
       </div>
+
+      {showCounter.value && (
+        <div class="text-sm flex justify-end animate-in slide-in-from-bottom duration-200">
+          <span
+            class={
+              isNearLimit.value ? "text-warning font-medium" : "text-success"
+            }
+          >
+            {interestCount.value} / {MAX_INTERESTS}
+          </span>
+        </div>
+      )}
     </>
   );
 }
