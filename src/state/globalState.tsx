@@ -88,12 +88,16 @@ const loadState = (key: string, defaultValue: any) => {
   return storedValue ? JSON.parse(storedValue) : defaultValue;
 };
 
-const saveState = (key: string, value: any) => {
+// to add new local stores add another key with (|"yourKey")
+export const saveSignal = (
+  key: "formSignal" | "userInfoSignal",
+  value: any
+) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const formState = signal(
-  loadState("formState", {
+export const postFormSignal = signal(
+  loadState("formSignal", {
     title: "",
     ingress: "",
     mainPicture: null as File | null,
@@ -103,6 +107,23 @@ export const formState = signal(
   })
 );
 
-formState.subscribe(() => {
-  saveState("formState", formState.value);
+postFormSignal.subscribe(() => {
+  saveSignal("formSignal", postFormSignal.value);
+});
+
+export const userInfoSignal = signal(
+  loadState("userInfoSignal", {
+    first_name: "",
+    last_name: "",
+    birth_date: "",
+    country: "",
+    state: "",
+    city: "",
+    gender: "",
+    interests: "",
+  })
+);
+
+userInfoSignal.subscribe(() => {
+  saveSignal("userInfoSignal", userInfoSignal.value);
 });
