@@ -1,5 +1,5 @@
 import { computed } from "@preact/signals";
-import { postFormSignal, saveState } from "../../state/globalState";
+import { postFormSignal, saveSignal } from "../../state/globalState";
 
 const MAX_TITLE = 60;
 const SHOW_COUNTER_AT = 44;
@@ -27,7 +27,7 @@ export default function TitleInput() {
               ...postFormSignal.value,
               title: value,
             };
-            saveState("formState", postFormSignal.value);
+            saveSignal("formSignal", postFormSignal.value);
           }
         }}
         class="input input-bordered w-full text-center mb-2"

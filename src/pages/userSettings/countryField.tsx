@@ -1,4 +1,4 @@
-import { userInfoSignal, saveState } from "../../state/globalState";
+import { userInfoSignal, saveSignal } from "../../state/globalState";
 
 export default function CountryField() {
   return (
@@ -14,7 +14,7 @@ export default function CountryField() {
         value={userInfoSignal.value.country ?? ""}
         onInput={(e) => {
           userInfoSignal.value.country = (e.target as HTMLInputElement).value;
-          saveState("userInfoSignal", userInfoSignal.value);
+          saveSignal("userInfoSignal", userInfoSignal.value);
         }}
       />
     </>

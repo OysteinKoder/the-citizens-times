@@ -1,5 +1,5 @@
 import { computed } from "@preact/signals";
-import { userInfoSignal, saveState } from "../../state/globalState";
+import { userInfoSignal, saveSignal } from "../../state/globalState";
 
 const MAX_NAME = 30;
 const SHOW_COUNTER_AT = 20;
@@ -30,7 +30,7 @@ export default function LastNameField() {
               ...userInfoSignal.value,
               last_name: value,
             };
-            saveState("userInfoSignal", userInfoSignal.value);
+            saveSignal("userInfoSignal", userInfoSignal.value);
           }
         }}
         maxLength={MAX_NAME}

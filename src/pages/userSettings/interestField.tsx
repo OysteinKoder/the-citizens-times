@@ -5,7 +5,6 @@ const MAX_INTERESTS = 15;
 const SHOW_COUNTER_AT = 10;
 
 export default function InterestsField() {
-  // Ensure interests is always an array
   if (!Array.isArray(userInfoSignal.value.interests)) {
     userInfoSignal.value.interests = [];
   }
@@ -16,7 +15,7 @@ export default function InterestsField() {
   const isNearLimit = computed(() => interestCount.value >= MAX_INTERESTS - 1);
   const isAtLimit = computed(() => interestCount.value >= MAX_INTERESTS);
 
-  const saveState = (key: string, value: any) =>
+  const saveSignal = (key: string, value: any) =>
     localStorage.setItem(key, JSON.stringify(value));
 
   const removeTag = (idx: number) => {
@@ -24,7 +23,7 @@ export default function InterestsField() {
       ...userInfoSignal.value,
       interests: interests.value.filter((_: string, i: number) => i !== idx),
     };
-    saveState("userInfoSignal", userInfoSignal.value);
+    saveSignal("userInfoSignal", userInfoSignal.value);
   };
 
   const handleInterestInput = (e: Event) => {
@@ -42,7 +41,7 @@ export default function InterestsField() {
         ...userInfoSignal.value,
         interests: [...interests.value, value],
       };
-      saveState("userInfoSignal", userInfoSignal.value);
+      saveSignal("userInfoSignal", userInfoSignal.value);
       input.value = "";
     }
   };

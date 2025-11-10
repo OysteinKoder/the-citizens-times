@@ -1,4 +1,4 @@
-import { postFormSignal, saveState } from "../../state/globalState";
+import { postFormSignal, saveSignal } from "../../state/globalState";
 import { signal } from "@preact/signals";
 
 const CountrySelect = () => {
@@ -14,7 +14,7 @@ const CountrySelect = () => {
         value={postFormSignal.value.country}
         onChange={(e) => {
           postFormSignal.value.country = (e.target as HTMLSelectElement).value;
-          saveState("formState", postFormSignal.value);
+          saveSignal("formSignal", postFormSignal.value);
           refresh.value++;
         }}
         class="select select-bordered w-full text-center mb-4"

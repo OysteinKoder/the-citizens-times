@@ -1,5 +1,5 @@
 import { computed } from "@preact/signals";
-import { postFormSignal, saveState } from "../../state/globalState";
+import { postFormSignal, saveSignal } from "../../state/globalState";
 
 const MAX_TEXT = 50_000;
 const SHOW_COUNTER_AT = 44_990;
@@ -26,7 +26,7 @@ export default function TextInput() {
               ...postFormSignal.value,
               text: value,
             };
-            saveState("formState", postFormSignal.value);
+            saveSignal("formSignal", postFormSignal.value);
           }
         }}
         class="textarea textarea-bordered w-full lg:h-52 text-left mb-2 resize-y"

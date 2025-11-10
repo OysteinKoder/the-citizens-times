@@ -1,4 +1,4 @@
-import { userInfoSignal, saveState } from "../../state/globalState";
+import { userInfoSignal, saveSignal } from "../../state/globalState";
 
 export default function BirthDateField() {
   return (
@@ -16,7 +16,7 @@ export default function BirthDateField() {
           userInfoSignal.value.birth_date = (
             e.target as HTMLInputElement
           ).value;
-          saveState("userInfoSignal", userInfoSignal.value);
+          saveSignal("userInfoSignal", userInfoSignal.value);
         }}
       />
     </>
