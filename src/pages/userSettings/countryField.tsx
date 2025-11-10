@@ -13,16 +13,21 @@ export default function CountryField() {
   // Compute available states based on selected country
   const availableStates = computed(() => {
     if (!selectedCountry.value) return [];
-    return State.getStatesOfCountry(selectedCountry.value) || [];
+    const states = State.getStatesOfCountry(selectedCountry.value) || [];
+    return states.length > 0 ? states : [];
   });
 
   // Compute available cities based on selected country and state
   const availableCities = computed(() => {
     if (!selectedCountry.value || !selectedState.value) return [];
-    return (
-      City.getCitiesOfState(selectedCountry.value, selectedState.value) || []
-    );
+    const cities =
+      City.getCitiesOfState(selectedCountry.value, selectedState.value) || [];
+    return cities.length > 0 ? cities : [];
   });
+
+  // Computed signals for visibility
+  const showStateSelector = computed(() => availableStates.value.length > 0);
+  const showCitySelector = computed(() => availableCities.value.length > 0);
 
   const handleCountryChange = (e: Event) => {
     const value = (e.target as HTMLSelectElement).value;
@@ -52,7 +57,7 @@ export default function CountryField() {
       userInfoSignal.value = {
         ...userInfoSignal.value,
         state: value,
-        stateName: selectedStateObj.name, // Optionally store state name
+        stateName: selectedStateObj.name,
         city: "",
       };
       saveSignal("userInfoSignal", userInfoSignal.value);
@@ -92,8 +97,8 @@ export default function CountryField() {
         </select>
       </div>
 
-      {/* State Selector */}
-      {selectedCountry.value && (
+      {/* State Selector - Only show if states are available */}
+      {selectedCountry.value && showStateSelector.value && (
         <div>
           <label class="label" for="state">
             <span class="label-text">State/Province</span>
@@ -114,8 +119,8 @@ export default function CountryField() {
         </div>
       )}
 
-      {/* City Selector */}
-      {selectedState.value && (
+      {/* City Selector - Only show if cities are available */}
+      {selectedState.value && showCitySelector.value && (
         <div>
           <label class="label" for="city">
             <span class="label-text">City</span>
