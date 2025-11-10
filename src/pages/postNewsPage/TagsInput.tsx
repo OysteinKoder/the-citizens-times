@@ -44,7 +44,7 @@ export default function TagsInput() {
     // The selection code with types:
     postFormSignal.value = {
       ...postFormSignal.value,
-      tags: tags.value.filter((tag: string, i: number): boolean => i !== index),
+      tags: tags.value.filter((i: number): boolean => i !== index),
     } as PostFormData;
     saveSignal("formSignal", postFormSignal.value);
   };
