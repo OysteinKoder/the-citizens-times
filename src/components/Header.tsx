@@ -57,15 +57,14 @@ const Header = () => {
                     ></path>
                   </svg>
                 </label>
-                <div class="flex-1 text-left">
-                  <a
-                    class="btn btn-ghost text-xl "
-                    href={"/humor-news"}
-                    onClick={closeDrawer}
-                  >
-                    TCT
-                  </a>
-                </div>
+
+                <a
+                  class="btn btn-ghost text-xl flex-1 text-left "
+                  href={"/humor-news"}
+                  onClick={closeDrawer}
+                >
+                  TCT 👷‍♂️
+                </a>
               </div>
               <div class="flex lg:block">
                 <ul class="menu menu-horizontal">
