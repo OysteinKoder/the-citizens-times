@@ -1,8 +1,9 @@
-import FirstNameField from "./userSettings/firstNameField";
-import LastNameField from "./userSettings/lastNameField";
-import BirthDateField from "./userSettings/birthDateField";
-import CountryField from "./userSettings/countryField";
-import InterestsField from "./userSettings/interestField";
+import FirstNameField from "./userSettings/FirstNameField";
+import LastNameField from "./userSettings/LastNameField";
+import BirthDateField from "./userSettings/BirthDateField";
+import InterestsField from "./userSettings/InterestField";
+import CountryStateCityField from "../components/CountryField";
+import { userInfoSignal } from "../state/globalState";
 
 const UserSettings = () => {
   return (
@@ -12,7 +13,10 @@ const UserSettings = () => {
         <FirstNameField />
         <LastNameField />
         <BirthDateField />
-        <CountryField />
+        <CountryStateCityField
+          signal={userInfoSignal}
+          saveKey="userInfoSignal"
+        />
         <InterestsField />
       </form>
     </>

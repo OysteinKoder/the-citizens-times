@@ -90,14 +90,14 @@ const loadState = (key: string, defaultValue: any) => {
 
 // to add new local stores add another key with (|"yourKey")
 export const saveSignal = (
-  key: "formSignal" | "userInfoSignal",
+  key: "postFormSignal" | "userInfoSignal" | string,
   value: any
 ) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
 export const postFormSignal = signal(
-  loadState("formSignal", {
+  loadState("postFormSignal", {
     title: "",
     ingress: "",
     mainPicture: null as File | null,
@@ -108,7 +108,7 @@ export const postFormSignal = signal(
 );
 
 postFormSignal.subscribe(() => {
-  saveSignal("formSignal", postFormSignal.value);
+  saveSignal("postFormSignal", postFormSignal.value);
 });
 
 export const userInfoSignal = signal(
