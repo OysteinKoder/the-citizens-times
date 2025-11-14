@@ -27,7 +27,7 @@ const Header = () => {
   if (userData) {
     return (
       <header>
-        <div class="drawer">
+        <div class="drawer z-10">
           <input
             id="my-drawer-2"
             type="checkbox"
