@@ -1,40 +1,60 @@
 import { userInfoSignal, saveSignal } from "../../state/globalState";
-import { Country, State, City } from "country-state-city";
-import { computed, signal } from "@preact/signals";
+import { signal, computed } from "@preact/signals";
+import { lazy, Suspense } from "preact/compat";
 
-export default function CountryField() {
-  const countries = Country.getAllCountries();
+// === Preload helper (optional but recommended) ===
+const preloadCSC = () => import("country-state-city");
 
-  // Initialize signals with existing values
+// === Lazy-loaded inner component ===
+const LazyCountryField = lazy(() =>
+  import("country-state-city").then((mod) => {
+    const allCountries = mod.Country.getAllCountries?.() || [];
+    return {
+      default: () => (
+        <CountryFieldInner module={mod} initialCountries={allCountries} />
+      ),
+    };
+  })
+);
+
+// === Inner component (only renders after CSC is loaded) ===
+function CountryFieldInner({
+  module,
+  initialCountries,
+}: {
+  module: any;
+  initialCountries: any[];
+}) {
+  // Signals
   const selectedCountry = signal(userInfoSignal.value.country || "");
   const selectedState = signal(userInfoSignal.value.state || "");
   const selectedCity = signal(userInfoSignal.value.city || "");
 
-  // Compute available states based on selected country
+  // Computed states/cities
   const availableStates = computed(() => {
     if (!selectedCountry.value) return [];
-    const states = State.getStatesOfCountry(selectedCountry.value) || [];
-    return states.length > 0 ? states : [];
+    return module.State.getStatesOfCountry(selectedCountry.value) || [];
   });
 
-  // Compute available cities based on selected country and state
   const availableCities = computed(() => {
     if (!selectedCountry.value || !selectedState.value) return [];
-    const cities =
-      City.getCitiesOfState(selectedCountry.value, selectedState.value) || [];
-    return cities.length > 0 ? cities : [];
+    return (
+      module.City.getCitiesOfState(
+        selectedCountry.value,
+        selectedState.value
+      ) || []
+    );
   });
 
-  // Computed signals for visibility
   const showStateSelector = computed(() => availableStates.value.length > 0);
   const showCitySelector = computed(() => availableCities.value.length > 0);
 
+  // Handlers
   const handleCountryChange = (e: Event) => {
     const value = (e.target as HTMLSelectElement).value;
     selectedCountry.value = value;
-    selectedState.value = ""; // Reset state
-    selectedCity.value = ""; // Reset city
-
+    selectedState.value = "";
+    selectedCity.value = "";
     userInfoSignal.value = {
       ...userInfoSignal.value,
       country: value,
@@ -46,38 +66,32 @@ export default function CountryField() {
 
   const handleStateChange = (e: Event) => {
     const value = (e.target as HTMLSelectElement).value;
-    const selectedStateObj = availableStates.value.find(
-      (state) => state.isoCode === value
+    const stateObj = availableStates.value.find(
+      (s: any) => s.isoCode === value
     );
+    if (!stateObj) return;
 
-    if (selectedStateObj) {
-      selectedState.value = value;
-      selectedCity.value = ""; // Reset city
-
-      userInfoSignal.value = {
-        ...userInfoSignal.value,
-        state: value,
-        stateName: selectedStateObj.name,
-        city: "",
-      };
-      saveSignal("userInfoSignal", userInfoSignal.value);
-    }
+    selectedState.value = value;
+    selectedCity.value = "";
+    userInfoSignal.value = {
+      ...userInfoSignal.value,
+      state: value,
+      stateName: stateObj.name,
+      city: "",
+    };
+    saveSignal("userInfoSignal", userInfoSignal.value);
   };
 
   const handleCityChange = (e: Event) => {
     const value = (e.target as HTMLSelectElement).value;
     selectedCity.value = value;
-
-    userInfoSignal.value = {
-      ...userInfoSignal.value,
-      city: value,
-    };
+    userInfoSignal.value = { ...userInfoSignal.value, city: value };
     saveSignal("userInfoSignal", userInfoSignal.value);
   };
 
   return (
     <div class="space-y-4">
-      {/* Country Selector */}
+      {/* Country */}
       <div>
         <label class="label" for="country">
           <span class="label-text">Country</span>
@@ -89,7 +103,7 @@ export default function CountryField() {
           onChange={handleCountryChange}
         >
           <option value="">Select a country</option>
-          {countries.map((country) => (
+          {initialCountries.map((country) => (
             <option key={country.isoCode} value={country.isoCode}>
               {country.name}
             </option>
@@ -97,7 +111,7 @@ export default function CountryField() {
         </select>
       </div>
 
-      {/* State Selector - Only show if states are available */}
+      {/* State */}
       {selectedCountry.value && showStateSelector.value && (
         <div>
           <label class="label" for="state">
@@ -110,7 +124,7 @@ export default function CountryField() {
             onChange={handleStateChange}
           >
             <option value="">Select a state</option>
-            {availableStates.value.map((state) => (
+            {availableStates.value.map((state: any) => (
               <option key={state.isoCode} value={state.isoCode}>
                 {state.name}
               </option>
@@ -119,7 +133,7 @@ export default function CountryField() {
         </div>
       )}
 
-      {/* City Selector - Only show if cities are available */}
+      {/* City */}
       {selectedState.value && showCitySelector.value && (
         <div>
           <label class="label" for="city">
@@ -132,7 +146,7 @@ export default function CountryField() {
             onChange={handleCityChange}
           >
             <option value="">Select a city</option>
-            {availableCities.value.map((city) => (
+            {availableCities.value.map((city: any) => (
               <option key={city.name} value={city.name}>
                 {city.name}
               </option>
@@ -143,3 +157,32 @@ export default function CountryField() {
     </div>
   );
 }
+
+// === Main Exported Component ===
+export default function CountryField() {
+  return (
+    <Suspense
+      fallback={
+        <div class="space-y-4">
+          <div>
+            <label class="label" for="country">
+              <span class="label-text">Country</span>
+            </label>
+            <select id="country" class="select select-bordered w-full" disabled>
+              <option>Loading countries...</option>
+            </select>
+          </div>
+        </div>
+      }
+    >
+      <LazyCountryField />
+    </Suspense>
+  );
+}
+
+// === Optional: Preload on hover/focus (feels instant) ===
+export const CountryFieldWithPreload = () => (
+  <div onMouseEnter={preloadCSC} onFocus={preloadCSC}>
+    <CountryField />
+  </div>
+);
