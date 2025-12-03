@@ -45,12 +45,27 @@ const PostNewsPage = () => {
     postFormSignal.value.country = "USA";
   }
 
-  const isValidImageUrl = (url: string) => {
-    const unsplashRegex = /^https:\/\/images\.unsplash\.com\/.+/;
-    const pexelsRegex = /^https:\/\/www\.pexels\.com\/photo\/.+/;
-    const pixabayRegex = /^https:\/\/cdn\.pixabay\.com\/.+/;
+  const isValidImageUrl = (url: string): boolean => {
     return (
-      unsplashRegex.test(url) || pexelsRegex.test(url) || pixabayRegex.test(url)
+      // Unsplash (both domains)
+      /^https?:\/\/(images\.unsplash\.com|plus\.unsplash\.com)\/.+[?&]w=\d/.test(
+        url
+      ) ||
+      /^https?:\/\/(images\.unsplash\.com|plus\.unsplash\.com)\/.+\.(jpe?g|png|webp|gif)/i.test(
+        url
+      ) ||
+      // Pexels page URL (most common user input)
+      /^https?:\/\/(www\.)?pexels\.com\/(photo\/[^/]+\/|\w+-)\d+\/?/.test(
+        url
+      ) ||
+      // Pexels direct image
+      /^https?:\/\/images\.pexels\.com\/photos\/\d+\/pexels-photo-\d+\.(jpe?g|png|webp|gif)/i.test(
+        url
+      ) ||
+      // Pixabay
+      /^https?:\/\/cdn\.pixabay\.com\/.+\/.+\.(jpe?g|png|gif|webp|svg)/i.test(
+        url
+      )
     );
   };
 
