@@ -14,8 +14,10 @@ interface PostInput {
   title: string;
   ingress: string;
   main_text: string;
-  keywords: string;
+  tags: string[];
   country: string;
+  state: string;
+  city: string;
   image: string;
 }
 
@@ -68,10 +70,10 @@ const PostNewsPage = () => {
         title: postFormSignal.value.title || "",
         ingress: postFormSignal.value.ingress || "",
         main_text: postFormSignal.value.text || "",
-        keywords: postFormSignal.value.tags
-          ? postFormSignal.value.tags.join(",")
-          : "",
-        country: postFormSignal.value.country || "USA",
+        tags: postFormSignal.value.tags,
+        country: postFormSignal.value.country || "",
+        state: postFormSignal.value.state || "",
+        city: postFormSignal.value.city || "",
         image: postFormSignal.value.mainPicture || "",
       };
       mutate(post);
@@ -84,6 +86,8 @@ const PostNewsPage = () => {
         pictures: "",
         tags: "",
         country: "USA",
+        state: "",
+        city: "",
       };
       refresh.value++;
     } else {
