@@ -1,12 +1,12 @@
 import { computed } from "@preact/signals";
-import { userInfoSignal, saveSignal } from "../../state/globalState";
+import { userFormSettings, saveSignal } from "../../state/globalState";
 
 const MAX_NAME = 30;
 const SHOW_COUNTER_AT = 20;
 
 export default function FirstNameField() {
   const charLength = computed(
-    () => userInfoSignal.value.first_name?.length || 0
+    () => userFormSettings.value.first_name?.length || 0
   );
   const showCounter = computed(() => charLength.value >= SHOW_COUNTER_AT);
   const isNearLimit = computed(() => charLength.value > MAX_NAME * 0.9);
@@ -21,16 +21,16 @@ export default function FirstNameField() {
         id="first_name"
         type="text"
         class="input input-bordered w-full text-center mb-2"
-        value={userInfoSignal.value.first_name}
+        value={userFormSettings.value.first_name}
         onInput={(e) => {
           const value = (e.target as HTMLInputElement).value;
 
           if (value.length <= MAX_NAME) {
-            userInfoSignal.value = {
-              ...userInfoSignal.value,
+            userFormSettings.value = {
+              ...userFormSettings.value,
               first_name: value,
             };
-            saveSignal("userInfoSignal", userInfoSignal.value);
+            saveSignal("userFormSettings", userFormSettings.value);
           }
         }}
         maxLength={MAX_NAME}

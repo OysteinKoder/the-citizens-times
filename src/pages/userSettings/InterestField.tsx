@@ -1,15 +1,15 @@
 import { computed } from "@preact/signals";
-import { userInfoSignal } from "../../state/globalState";
+import { userFormSettings } from "../../state/globalState";
 
 const MAX_INTERESTS = 15;
 const SHOW_COUNTER_AT = 10;
 
 export default function InterestsField() {
-  if (!Array.isArray(userInfoSignal.value.interests)) {
-    userInfoSignal.value.interests = [];
+  if (!Array.isArray(userFormSettings.value.interests)) {
+    userFormSettings.value.interests = [];
   }
 
-  const interests = computed(() => userInfoSignal.value.interests || []);
+  const interests = computed(() => userFormSettings.value.interests || []);
   const interestCount = computed(() => interests.value.length);
   const showCounter = computed(() => interestCount.value >= SHOW_COUNTER_AT);
   const isNearLimit = computed(() => interestCount.value >= MAX_INTERESTS - 1);
@@ -19,11 +19,11 @@ export default function InterestsField() {
     localStorage.setItem(key, JSON.stringify(value));
 
   const removeTag = (idx: number) => {
-    userInfoSignal.value = {
-      ...userInfoSignal.value,
+    userFormSettings.value = {
+      ...userFormSettings.value,
       interests: interests.value.filter((_: string, i: number) => i !== idx),
     };
-    saveSignal("userInfoSignal", userInfoSignal.value);
+    saveSignal("userFormSettings", userFormSettings.value);
   };
 
   const handleInterestInput = (e: Event) => {
@@ -37,11 +37,11 @@ export default function InterestsField() {
         return;
       }
 
-      userInfoSignal.value = {
-        ...userInfoSignal.value,
+      userFormSettings.value = {
+        ...userFormSettings.value,
         interests: [...interests.value, value],
       };
-      saveSignal("userInfoSignal", userInfoSignal.value);
+      saveSignal("userFormSettings", userFormSettings.value);
       input.value = "";
     }
   };

@@ -90,7 +90,7 @@ const loadState = (key: string, defaultValue: any) => {
 
 // to add new local stores add another key with (|"yourKey")
 export const saveSignal = (
-  key: "postFormSignal" | "userInfoSignal" | string,
+  key: "postFormSignal" | "userFormSettings" | string,
   value: any
 ) => {
   localStorage.setItem(key, JSON.stringify(value));
@@ -111,19 +111,19 @@ postFormSignal.subscribe(() => {
   saveSignal("postFormSignal", postFormSignal.value);
 });
 
-export const userInfoSignal = signal(
-  loadState("userInfoSignal", {
+export const userFormSettings = signal(
+  loadState("userFormSettings", {
     first_name: "",
     last_name: "",
+    gender: "",
     birth_date: "",
     country: "",
     state: "",
     city: "",
-    gender: "",
-    interests: "",
+    interests: [] as string[],
   })
 );
 
-userInfoSignal.subscribe(() => {
-  saveSignal("userInfoSignal", userInfoSignal.value);
+userFormSettings.subscribe(() => {
+  saveSignal("userFormSettings", userFormSettings.value);
 });

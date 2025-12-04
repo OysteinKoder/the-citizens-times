@@ -47,18 +47,17 @@ const PostNewsPage = () => {
 
   const isValidImageUrl = (url: string): boolean => {
     return (
-      // Unsplash (both domains)
+      // Unsplash
       /^https?:\/\/(images\.unsplash\.com|plus\.unsplash\.com)\/.+[?&]w=\d/.test(
         url
       ) ||
       /^https?:\/\/(images\.unsplash\.com|plus\.unsplash\.com)\/.+\.(jpe?g|png|webp|gif)/i.test(
         url
       ) ||
-      // Pexels page URL (most common user input)
+      // Pexels
       /^https?:\/\/(www\.)?pexels\.com\/(photo\/[^/]+\/|\w+-)\d+\/?/.test(
         url
       ) ||
-      // Pexels direct image
       /^https?:\/\/images\.pexels\.com\/photos\/\d+\/pexels-photo-\d+\.(jpe?g|png|webp|gif)/i.test(
         url
       ) ||

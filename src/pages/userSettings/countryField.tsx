@@ -1,4 +1,4 @@
-import { userInfoSignal, saveSignal } from "../../state/globalState";
+import { userFormSettings, saveSignal } from "../../state/globalState";
 import { signal, computed } from "@preact/signals";
 import { lazy, Suspense } from "preact/compat";
 
@@ -26,9 +26,9 @@ function CountryFieldInner({
   initialCountries: any[];
 }) {
   // Signals
-  const selectedCountry = signal(userInfoSignal.value.country || "");
-  const selectedState = signal(userInfoSignal.value.state || "");
-  const selectedCity = signal(userInfoSignal.value.city || "");
+  const selectedCountry = signal(userFormSettings.value.country || "");
+  const selectedState = signal(userFormSettings.value.state || "");
+  const selectedCity = signal(userFormSettings.value.city || "");
 
   // Computed states/cities
   const availableStates = computed(() => {
@@ -55,13 +55,13 @@ function CountryFieldInner({
     selectedCountry.value = value;
     selectedState.value = "";
     selectedCity.value = "";
-    userInfoSignal.value = {
-      ...userInfoSignal.value,
+    userFormSettings.value = {
+      ...userFormSettings.value,
       country: value,
       state: "",
       city: "",
     };
-    saveSignal("userInfoSignal", userInfoSignal.value);
+    saveSignal("userFormSettings", userFormSettings.value);
   };
 
   const handleStateChange = (e: Event) => {
@@ -73,20 +73,20 @@ function CountryFieldInner({
 
     selectedState.value = value;
     selectedCity.value = "";
-    userInfoSignal.value = {
-      ...userInfoSignal.value,
+    userFormSettings.value = {
+      ...userFormSettings.value,
       state: value,
       stateName: stateObj.name,
       city: "",
     };
-    saveSignal("userInfoSignal", userInfoSignal.value);
+    saveSignal("userFormSettings", userFormSettings.value);
   };
 
   const handleCityChange = (e: Event) => {
     const value = (e.target as HTMLSelectElement).value;
     selectedCity.value = value;
-    userInfoSignal.value = { ...userInfoSignal.value, city: value };
-    saveSignal("userInfoSignal", userInfoSignal.value);
+    userFormSettings.value = { ...userFormSettings.value, city: value };
+    saveSignal("userFormSettings", userFormSettings.value);
   };
 
   return (
