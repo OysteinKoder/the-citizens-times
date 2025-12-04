@@ -28,8 +28,8 @@ const createPost = async (post: PostInput) => {
 };
 
 const PostNewsPage = () => {
-  const refresh = signal(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const refresh = signal(0);
 
   const { mutate } = useMutation({
     mutationFn: createPost,

@@ -5,8 +5,11 @@ import InterestsField from "./userSettings/InterestField";
 import CountryStateCityField from "../components/CountryField";
 import { userFormSettings } from "../state/globalState";
 import { supabase } from "../supa-base-client";
+import { useState } from "preact/hooks";
+import { signal } from "@preact/signals";
+import { useMutation } from "@tanstack/react-query";
 
-interface userSettings {
+interface UserSettings {
   first_name: string;
   last_name: string;
   gender: string;
@@ -17,18 +20,63 @@ interface userSettings {
   interests: string[];
 }
 
-const updateSettings = async (settings: userSettings) => {
+const updateSettings = async (settings: UserSettings) => {
   const { data, error } = await supabase
-    .from("userSettings")
+    .from("UserSettings")
     .insert([settings]);
   if (error) throw new Error(error.message);
   return data;
 };
 const UserSettings = () => {
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const refreshSignal = signal(0);
+
+  const { mutate } = useMutation({
+    mutationFn: updateSettings,
+    onError: (error: any) => {
+      setErrorMsg(error.message);
+    },
+    onSuccess: () => {
+      setErrorMsg(null);
+    },
+  });
+
+  const handleSubmit = (e: Event) => {
+    if (userFormSettings.value.interests) {
+      e.preventDefault();
+    }
+    const settings: UserSettings = {
+      first_name: userFormSettings.value.first_name || "",
+      last_name: userFormSettings.value.last_name || "",
+      gender: userFormSettings.value.gender || "",
+      birth_date: userFormSettings.value.birth_date || "",
+      country: userFormSettings.value.country || "",
+      state: userFormSettings.value.state || "",
+      city: userFormSettings.value.city || "",
+      interests: userFormSettings.value.interests,
+    };
+    mutate(settings);
+    refreshSignal.value++;
+    // // Reset form
+    // userFormSettings.value = {
+    //   first_name: "",
+    //   last_name: "",
+    //   gender: "",
+    //   birth_date: "",
+    //   country: "",
+    //   state: "",
+    //   city: "",
+    //   interests: "",
+    // };
+  };
+
   return (
     <>
       <h1 class="sr-only">Settings</h1>
-      <form class="form-control w-full max-w-lg mx-auto p-4">
+      <form
+        class="form-control w-full max-w-lg mx-auto p-4"
+        onSubmit={handleSubmit}
+      >
         <FirstNameField />
         <LastNameField />
         <BirthDateField />
@@ -37,6 +85,10 @@ const UserSettings = () => {
           saveKey="userFormSettings"
         />
         <InterestsField />
+        {errorMsg && <div class="alert alert-error mb-4">{errorMsg}</div>}
+        <button type="submit" class="btn btn-primary w-full mt-4">
+          Submit
+        </button>
       </form>
     </>
   );
