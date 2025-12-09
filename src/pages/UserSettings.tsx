@@ -21,9 +21,29 @@ interface UserSettings {
 }
 
 const updateSettings = async (settings: UserSettings) => {
-  const { data, error } = await supabase
-    .from("UserSettings")
-    .insert([settings]);
+  // Verify user is authenticated
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) {
+    throw new Error("User not authenticated");
+  }
+
+  const payload = {
+    first_name: settings.first_name,
+    last_name: settings.last_name,
+    gender: settings.gender,
+    birth_date: settings.birth_date,
+    country: settings.country,
+    state: settings.state,
+    city: settings.city,
+    interests: settings.interests,
+    metadata: {},
+  };
+
+  const { data, error } = await supabase.rpc("upsert_user_profile_json", {
+    p_payload: payload,
+  });
   if (error) throw new Error(error.message);
   return data;
 };
