@@ -70,24 +70,13 @@ const UserSettings = () => {
       last_name: userFormSettings.value.last_name || "",
       gender: userFormSettings.value.gender || "",
       birth_date: userFormSettings.value.birth_date || "",
-      country: userFormSettings.value.country || "",
-      state: userFormSettings.value.state || "",
-      city: userFormSettings.value.city || "",
-      interests: userFormSettings.value.interests,
+      country: userFormSettings.value.country || "", //
+      state: userFormSettings.value.state || "", //
+      city: userFormSettings.value.city || "", //
+      interests: userFormSettings.value.interests || [],
     };
     mutate(settings);
     refreshSignal.value++;
-    // // Reset form
-    // userFormSettings.value = {
-    //   first_name: "",
-    //   last_name: "",
-    //   gender: "",
-    //   birth_date: "",
-    //   country: "",
-    //   state: "",
-    //   city: "",
-    //   interests: "",
-    // };
   };
 
   return (

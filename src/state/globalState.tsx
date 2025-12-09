@@ -115,11 +115,11 @@ export const userFormSettings = signal(
   loadState("userFormSettings", {
     first_name: "",
     last_name: "",
-    gender: "",
     birth_date: "",
     country: "",
     state: "",
     city: "",
+    gender: "",
     interests: [] as string[],
   })
 );

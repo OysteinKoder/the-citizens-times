@@ -1,188 +1,157 @@
-import { userFormSettings, saveSignal } from "../../state/globalState";
-import { signal, computed } from "@preact/signals";
-import { lazy, Suspense } from "preact/compat";
+// src/components/CountryField.tsx (or wherever you keep it)
 
-// === Preload helper (optional but recommended) ===
+import { lazy, Suspense } from "preact/compat";
+import { signal, computed, effect } from "@preact/signals";
+import { userFormSettings, saveSignal } from "../../state/globalState";
+
+// Optional: preload on hover/focus for instant feel
 const preloadCSC = () => import("country-state-city");
 
-// === Lazy-loaded inner component ===
-const LazyCountryField = lazy(() =>
-  import("country-state-city").then((mod) => {
-    const allCountries = mod.Country.getAllCountries?.() || [];
-    return {
-      default: () => (
-        <CountryFieldInner module={mod} initialCountries={allCountries} />
-      ),
-    };
-  })
-);
+const LazyCSC = lazy(() => import("country-state-city"));
 
-// === Inner component (only renders after CSC is loaded) ===
-function CountryFieldInner({
-  module,
-  initialCountries,
-}: {
-  module: any;
-  initialCountries: any[];
-}) {
-  // Signals
+function CountryFieldInner() {
+  // Local signals that stay in sync with global state
   const selectedCountry = signal(userFormSettings.value.country || "");
   const selectedState = signal(userFormSettings.value.state || "");
   const selectedCity = signal(userFormSettings.value.city || "");
 
-  // Computed states/cities
-  const availableStates = computed(() => {
-    if (!selectedCountry.value) return [];
-    return module.State.getStatesOfCountry(selectedCountry.value) || [];
-  });
-
-  const availableCities = computed(() => {
-    if (!selectedCountry.value || !selectedState.value) return [];
-    return (
-      module.City.getCitiesOfState(
-        selectedCountry.value,
-        selectedState.value
-      ) || []
-    );
-  });
-
-  const showStateSelector = computed(() => availableStates.value.length > 0);
-  const showCitySelector = computed(() => availableCities.value.length > 0);
-
-  // Handlers
-  const handleCountryChange = (e: Event) => {
-    const value = (e.target as HTMLSelectElement).value;
-    selectedCountry.value = value;
-    selectedState.value = "";
-    selectedCity.value = "";
+  // Keep global state in sync whenever local signals change
+  effect(() => {
     userFormSettings.value = {
       ...userFormSettings.value,
-      country: value,
-      state: "",
-      city: "",
+      country: selectedCountry.value,
+      state: selectedState.value,
+      city: selectedCity.value,
     };
     saveSignal("userFormSettings", userFormSettings.value);
-  };
-
-  const handleStateChange = (e: Event) => {
-    const value = (e.target as HTMLSelectElement).value;
-    const stateObj = availableStates.value.find(
-      (s: any) => s.isoCode === value
-    );
-    if (!stateObj) return;
-
-    selectedState.value = value;
-    selectedCity.value = "";
-    userFormSettings.value = {
-      ...userFormSettings.value,
-      state: value,
-      stateName: stateObj.name,
-      city: "",
-    };
-    saveSignal("userFormSettings", userFormSettings.value);
-  };
-
-  const handleCityChange = (e: Event) => {
-    const value = (e.target as HTMLSelectElement).value;
-    selectedCity.value = value;
-    userFormSettings.value = { ...userFormSettings.value, city: value };
-    saveSignal("userFormSettings", userFormSettings.value);
-  };
+  });
 
   return (
-    <div class="space-y-4">
-      {/* Country */}
-      <div>
-        <label class="label" for="country">
-          <span class="label-text">Country</span>
-        </label>
-        <select
-          id="country"
-          class="select select-bordered w-full"
-          value={selectedCountry.value}
-          onChange={handleCountryChange}
-        >
-          <option value="">Select a country</option>
-          {initialCountries.map((country) => (
-            <option key={country.isoCode} value={country.isoCode}>
-              {country.name}
-            </option>
-          ))}
-        </select>
-      </div>
+    <LazyCSC>
+      {(csc) => {
+        const { Country, State, City } = csc;
 
-      {/* State */}
-      {selectedCountry.value && showStateSelector.value && (
-        <div>
-          <label class="label" for="state">
-            <span class="label-text">State/Province</span>
-          </label>
-          <select
-            id="state"
-            class="select select-bordered w-full"
-            value={selectedState.value}
-            onChange={handleStateChange}
-          >
-            <option value="">Select a state</option>
-            {availableStates.value.map((state: any) => (
-              <option key={state.isoCode} value={state.isoCode}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+        const countries = Country.getAllCountries();
 
-      {/* City */}
-      {selectedState.value && showCitySelector.value && (
-        <div>
-          <label class="label" for="city">
-            <span class="label-text">City</span>
-          </label>
-          <select
-            id="city"
-            class="select select-bordered w-full"
-            value={selectedCity.value}
-            onChange={handleCityChange}
-          >
-            <option value="">Select a city</option>
-            {availableCities.value.map((city: any) => (
-              <option key={city.name} value={city.name}>
-                {city.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-    </div>
+        const selectedCountryObj = countries.find(
+          (c: any) => c.name === selectedCountry.value
+        );
+
+        const states = selectedCountryObj
+          ? State.getStatesOfCountry(selectedCountryObj.isoCode)
+          : [];
+
+        const selectedStateObj = states.find(
+          (s: any) => s.name === selectedState.value
+        );
+
+        const cities =
+          selectedCountryObj && selectedStateObj
+            ? City.getCitiesOfState(
+                selectedCountryObj.isoCode,
+                selectedStateObj.isoCode
+              )
+            : [];
+
+        const handleCountryChange = (e: Event) => {
+          const value = (e.target as HTMLSelectElement).value;
+          selectedCountry.value = value;
+          selectedState.value = "";
+          selectedCity.value = "";
+        };
+
+        const handleStateChange = (e: Event) => {
+          const value = (e.target as HTMLSelectElement).value;
+          selectedState.value = value;
+          selectedCity.value = "";
+        };
+
+        const handleCityChange = (e: Event) => {
+          selectedCity.value = (e.target as HTMLSelectElement).value;
+        };
+
+        return (
+          <div class="space-y-6">
+            {/* COUNTRY */}
+            <div>
+              <label class="label">
+                <span class="label-text font-medium">Country</span>
+              </label>
+              <select
+                class="select select-bordered w-full"
+                value={selectedCountry.value}
+                onChange={handleCountryChange}
+              >
+                <option value="">Select a country</option>
+                {countries.map((c: any) => (
+                  <option key={c.isoCode} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* STATE / REGION */}
+            {states.length > 0 && (
+              <div>
+                <label class="label">
+                  <span class="label-text font-medium">State / Region</span>
+                </label>
+                <select
+                  class="select select-bordered w-full"
+                  value={selectedState.value}
+                  onChange={handleStateChange}
+                >
+                  <option value="">Select a state</option>
+                  {states.map((s: any) => (
+                    <option key={s.isoCode} value={s.name}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* CITY */}
+            {cities.length > 0 && (
+              <div>
+                <label class="label">
+                  <span class="label-text font-medium">City</span>
+                </label>
+                <select
+                  class="select select-bordered w-full"
+                  value={selectedCity.value}
+                  onChange={handleCityChange}
+                >
+                  <option value="">Select a city</option>
+                  {cities.map((city: any) => (
+                    <option key={city.name} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+        );
+      }}
+    </LazyCSC>
   );
 }
 
-// === Main Exported Component ===
 export default function CountryField() {
   return (
     <Suspense
-      fallback={
-        <div class="space-y-4">
-          <div>
-            <label class="label" for="country">
-              <span class="label-text">Country</span>
-            </label>
-            <select id="country" class="select select-bordered w-full" disabled>
-              <option>Loading countries...</option>
-            </select>
-          </div>
-        </div>
-      }
+      fallback={<div class="text-center py-8">Loading locations...</div>}
     >
-      <LazyCountryField />
+      <CountryFieldInner />
     </Suspense>
   );
 }
 
-// === Optional: Preload on hover/focus (feels instant) ===
+// Optional: feels instant when user hovers the form
 export const CountryFieldWithPreload = () => (
-  <div onMouseEnter={preloadCSC} onFocus={preloadCSC}>
+  <div onMouseEnter={preloadCSC} onFocusIn={preloadCSC}>
     <CountryField />
   </div>
 );
