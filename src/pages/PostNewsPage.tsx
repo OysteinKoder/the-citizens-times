@@ -8,7 +8,7 @@ import IngressInput from "./postNewsPage/IngressInput";
 import TextInput from "./postNewsPage/TextInput";
 import TagsInput from "./postNewsPage/TagsInput";
 import ImageUrlInput from "./postNewsPage/ImageUrlInput";
-import CountryStateCityField from "../components/CountryField";
+import CountryStateCityFields from "../components/CountryStateCityFields";
 
 interface PostInput {
   title: string;
@@ -120,7 +120,7 @@ const PostNewsPage = () => {
         <IngressInput />
         <TextInput />
         <TagsInput />
-        <CountryStateCityField
+        <CountryStateCityFields
           signal={postFormSignal}
           saveKey="postFormSignal"
         />

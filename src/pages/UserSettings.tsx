@@ -2,7 +2,7 @@ import FirstNameField from "./userSettings/FirstNameField";
 import LastNameField from "./userSettings/LastNameField";
 import BirthDateField from "./userSettings/BirthDateField";
 import InterestsField from "./userSettings/InterestField";
-import CountryStateCityField from "../components/CountryField";
+import CountryStateCityFields from "../components/CountryStateCityFields";
 import { userFormSettings } from "../state/globalState";
 import { supabase } from "../supa-base-client";
 import { useState } from "preact/hooks";
@@ -89,7 +89,7 @@ const UserSettings = () => {
         <FirstNameField />
         <LastNameField />
         <BirthDateField />
-        <CountryStateCityField
+        <CountryStateCityFields
           signal={userFormSettings}
           saveKey="userFormSettings"
         />
