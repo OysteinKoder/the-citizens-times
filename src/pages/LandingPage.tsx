@@ -5,6 +5,7 @@ import HumorPage from "../pages/HumorPage";
 import PostNewsPage from "./PostNewsPage";
 import { LocationProvider, ErrorBoundary, Router, Route } from "preact-iso";
 import UserSettings from "./UserSettings";
+import AlgorithmPage from "./AlgorithmPage";
 
 export function LandingPage() {
   return (
@@ -17,6 +18,7 @@ export function LandingPage() {
           <Route path="/humor-news" component={HumorPage} />
           <Route path="/post-news" component={PostNewsPage} />
           <Route path="/user-settings" component={UserSettings} />
+          <Route path="/user-algorithm" component={AlgorithmPage} />
         </Router>
       </ErrorBoundary>
     </LocationProvider>

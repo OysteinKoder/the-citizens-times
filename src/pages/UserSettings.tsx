@@ -17,7 +17,6 @@ interface UserSettings {
   country: string;
   state: string;
   city: string;
-  interests: string[];
 }
 
 const updateSettings = async (settings: UserSettings) => {
@@ -37,7 +36,6 @@ const updateSettings = async (settings: UserSettings) => {
     country: settings.country,
     state: settings.state,
     city: settings.city,
-    interests: settings.interests,
     metadata: {},
   };
 
@@ -49,7 +47,6 @@ const updateSettings = async (settings: UserSettings) => {
 };
 const UserSettings = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const refreshSignal = signal(0);
 
   const { mutate } = useMutation({
     mutationFn: updateSettings,
@@ -62,9 +59,6 @@ const UserSettings = () => {
   });
 
   const handleSubmit = (e: Event) => {
-    if (userFormSettings.value.interests) {
-      e.preventDefault();
-    }
     const settings: UserSettings = {
       first_name: userFormSettings.value.first_name || "",
       last_name: userFormSettings.value.last_name || "",
@@ -73,10 +67,8 @@ const UserSettings = () => {
       country: userFormSettings.value.country || "", //
       state: userFormSettings.value.state || "", //
       city: userFormSettings.value.city || "", //
-      interests: userFormSettings.value.interests || [],
     };
     mutate(settings);
-    refreshSignal.value++;
   };
 
   return (
@@ -93,9 +85,8 @@ const UserSettings = () => {
           signal={userFormSettings}
           saveKey="userFormSettings"
         />
-        <InterestsField />
         {errorMsg && <div class="alert alert-error mb-4">{errorMsg}</div>}
-        <button type="submit" class="btn btn-primary w-full mt-4">
+        <button type="submit" class="btn btn-primary w-full mt-8">
           Submit
         </button>
       </form>
