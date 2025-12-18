@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "preact/hooks";
 import { supabase } from "../supa-base-client";
 import { User } from "@supabase/auth-js";
+import ThemeSwitcher from "./header/ThemeSwitcher";
 
 const Header = () => {
   const [userData, setUserData] = useState<User | null>(null);
@@ -157,6 +158,9 @@ const Header = () => {
                     />
                   </svg>
                 </a>
+              </li>
+              <li>
+                <ThemeSwitcher />
               </li>
             </ul>
           </div>
