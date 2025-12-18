@@ -41,34 +41,31 @@ const AlgorithmPage = () => {
     fetchInterests();
   }, []);
 
-  return (
-    <>
-      <h1 class="sr-only">Affect Algorithm</h1>
-      {useInterests ? (
-        <>
-          <button
-            class="btn"
-            onClick={() => {
-              console.log(useInterests);
-            }}
-          >
-            console.log
-          </button>
-          <div>
-            {useInterests.map((interest, idx) => (
-              <div key={idx}>
-                <span>
-                  {interest.name}: {interest.weight}
-                </span>
-              </div>
-            ))}
-          </div>
-        </>
-      ) : (
-        <div>Loading...</div>
-      )}
-    </>
-  );
+  if (useInterests) {
+    return (
+      <>
+        <button
+          class="btn"
+          onClick={() => {
+            console.log(useInterests);
+          }}
+        >
+          console.log
+        </button>
+        <div>
+          {useInterests.map((interest, idx) => (
+            <div key={idx}>
+              <span>
+                {interest.name}: {interest.weight}
+              </span>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  } else {
+    <div>Loading...</div>;
+  }
 };
 
 export default AlgorithmPage;
