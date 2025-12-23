@@ -44,6 +44,20 @@ const AlgorithmPage = () => {
   if (useInterests) {
     return (
       <>
+        <form class="">
+          {useInterests.map((interest, idx) => (
+            <div key={interest}>
+              <label key={interest.name} class="mr-4 size-1/2">
+                {interest.name}
+              </label>
+              <input
+                key={interest.weight + idx}
+                class="input"
+                placeholder={"Points: " + interest.weight.toString()}
+              ></input>
+            </div>
+          ))}
+        </form>
         <button
           class="btn"
           onClick={() => {
@@ -52,15 +66,6 @@ const AlgorithmPage = () => {
         >
           console.log
         </button>
-        <div>
-          {useInterests.map((interest, idx) => (
-            <div key={idx}>
-              <span>
-                {interest.name}: {interest.weight}
-              </span>
-            </div>
-          ))}
-        </div>
       </>
     );
   } else {
