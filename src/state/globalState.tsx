@@ -83,6 +83,7 @@ export const MockAdsData = signal([
   },
 ]);
 
+///////////////////////////////// UTILS ///////////////////////////////////////////////////////
 const loadState = (key: string, defaultValue: any) => {
   const storedValue = localStorage.getItem(key);
   return storedValue ? JSON.parse(storedValue) : defaultValue;
@@ -90,12 +91,13 @@ const loadState = (key: string, defaultValue: any) => {
 
 // to add new local stores add another key with (|"yourKey")
 export const saveSignal = (
-  key: "postFormSignal" | "userFormSettings" | string,
+  key: "postFormSignal" | "userFormSettings" | "algorithmSignal" | string,
   value: any
 ) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
+///////////////////// POST FORM ///////////////////////////////////////
 export const postFormSignal = signal(
   loadState("postFormSignal", {
     title: "",
@@ -111,6 +113,7 @@ postFormSignal.subscribe(() => {
   saveSignal("postFormSignal", postFormSignal.value);
 });
 
+///////////////////////// USER SETTINGS ////////////////////////////////////
 export const userFormSettings = signal(
   loadState("userFormSettings", {
     first_name: "",
@@ -127,3 +130,10 @@ export const userFormSettings = signal(
 userFormSettings.subscribe(() => {
   saveSignal("userFormSettings", userFormSettings.value);
 });
+
+///////////////////////// ALGORITHM ///////////////////////////////////////////////
+export const algorithmSignal = signal(loadState("algorithmSignal", {}));
+
+algorithmSignal.subscribe(() =>
+  saveSignal("algorithmSignal", algorithmSignal.value)
+);

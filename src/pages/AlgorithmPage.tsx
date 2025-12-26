@@ -30,7 +30,7 @@ const AlgorithmPage = () => {
           weight: Number(weight),
         })
       );
-      setInterests(() => interestsArray);
+      setInterests(() => interestsArray.sort((a, b) => a.weight - b.weight));
       console.log("Fetched interests:", useInterests);
     } catch (err) {
       console.error("Error fetching interests:", err);
