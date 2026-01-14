@@ -1,5 +1,5 @@
 import { supabase } from "../supa-base-client";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { algorithmSignal } from "../state/globalState";
 
 type Interest = {
@@ -8,8 +8,6 @@ type Interest = {
 };
 
 const AlgorithmPage = () => {
-  const [useInterests, setInterests] = useState<Interest[]>([]);
-
   async function fetchInterests() {
     try {
       const { data: userData } = await supabase.auth.getUser();
@@ -31,38 +29,55 @@ const AlgorithmPage = () => {
         }))
         .sort((a, b) => b.weight - a.weight);
       console.log(interestsArray);
-      setInterests(interestsArray);
-      console.log("Fetched interests:", useInterests);
+      algorithmSignal.value = interestsArray;
+      console.log("Fetched interests:", algorithmSignal.value);
     } catch (err) {
       console.error("Error fetching interests:", err);
     }
   }
 
+  const removeInterest = (interestName: string) => {
+    algorithmSignal.value = algorithmSignal.value.filter(
+      (interest: any) => interest.name !== interestName
+    );
+  };
+
   useEffect(() => {
-    fetchInterests();
+    if (algorithmSignal.value.length < 2) {
+      fetchInterests();
+    }
   }, []);
 
-  if (useInterests) {
-    return (
+  let content;
+  if (
+    algorithmSignal.value &&
+    Array.isArray(algorithmSignal.value) &&
+    algorithmSignal.value.length > 0
+  ) {
+    content = (
       <>
         <form class="">
-          {useInterests.map((interest, idx) => (
-            <div key={interest}>
-              <label key={interest.name} class="mr-4 size-1/2">
-                {interest.name}
-              </label>
+          {algorithmSignal.value.map((interest: Interest) => (
+            <div class="mt-2 flex items-center gap-2" key={interest.name}>
               <input
-                key={interest.weight + idx}
-                class="input"
-                placeholder={"Points: " + interest.weight.toString()}
-              ></input>
+                class="input flex-1"
+                placeholder={interest.name + ": " + interest.weight.toString()}
+              />
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onClick={() => removeInterest(interest.name)}
+                aria-label={`Remove ${interest.name}`}
+              >
+                -
+              </button>
             </div>
           ))}
         </form>
         <button
           class="btn"
           onClick={() => {
-            console.log(useInterests);
+            console.log(algorithmSignal.value);
           }}
         >
           console.log
@@ -70,8 +85,15 @@ const AlgorithmPage = () => {
       </>
     );
   } else {
-    <div>Loading...</div>;
+    content = <div>Loading...</div>;
   }
+
+  return (
+    <>
+      <h1 class="sr-only">Affect Algorithm</h1>
+      {content}
+    </>
+  );
 };
 
 export default AlgorithmPage;
