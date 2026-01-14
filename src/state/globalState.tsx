@@ -84,22 +84,31 @@ export const MockAdsData = signal([
 ]);
 
 ///////////////////////////////// UTILS ///////////////////////////////////////////////////////
-const loadState = (key: string, defaultValue: any) => {
+const loadFromLocalS = (key: string, defaultValue: any) => {
   const storedValue = localStorage.getItem(key);
   return storedValue ? JSON.parse(storedValue) : defaultValue;
 };
 
-// to add new local stores add another key with (|"yourKey")
-export const saveSignal = (
+// add another key? => add (|"yourKey")
+export const saveInLocalS = (
   key: "postFormSignal" | "userFormSettings" | "algorithmSignal" | string,
   value: any
 ) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
+export const saveInSessionS = (key: "algorithmSignal" | string, value: any) => {
+  sessionStorage.setItem(key, JSON.stringify(value));
+};
+
+const loadFromSessionS = (key: string, defaultValue: any) => {
+  const storedValue = sessionStorage.getItem(key);
+  return storedValue ? JSON.parse(storedValue) : defaultValue;
+};
+
 ///////////////////// POST FORM ///////////////////////////////////////
 export const postFormSignal = signal(
-  loadState("postFormSignal", {
+  loadFromLocalS("postFormSignal", {
     title: "",
     ingress: "",
     mainPicture: null as File | null,
@@ -110,12 +119,12 @@ export const postFormSignal = signal(
 );
 
 postFormSignal.subscribe(() => {
-  saveSignal("postFormSignal", postFormSignal.value);
+  saveInLocalS("postFormSignal", postFormSignal.value);
 });
 
 ///////////////////////// USER SETTINGS ////////////////////////////////////
 export const userFormSettings = signal(
-  loadState("userFormSettings", {
+  loadFromLocalS("userFormSettings", {
     first_name: "",
     last_name: "",
     birth_date: "",
@@ -128,12 +137,12 @@ export const userFormSettings = signal(
 );
 
 userFormSettings.subscribe(() => {
-  saveSignal("userFormSettings", userFormSettings.value);
+  saveInLocalS("userFormSettings", userFormSettings.value);
 });
 
 ///////////////////////// ALGORITHM ///////////////////////////////////////////////
-export const algorithmSignal = signal(loadState("algorithmSignal", {}));
+export const algorithmSignal = signal(loadFromSessionS("algorithmSignal", {}));
 
 algorithmSignal.subscribe(() =>
-  saveSignal("algorithmSignal", algorithmSignal.value)
+  saveInSessionS("algorithmSignal", algorithmSignal.value)
 );

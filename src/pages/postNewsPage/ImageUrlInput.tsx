@@ -1,4 +1,4 @@
-import { postFormSignal, saveSignal } from "../../state/globalState";
+import { postFormSignal, saveInLocalS } from "../../state/globalState";
 
 const ImageUrlInput = () => {
   return (
@@ -13,7 +13,7 @@ const ImageUrlInput = () => {
           postFormSignal.value.mainPicture = (
             e.target as HTMLInputElement
           ).value;
-          saveSignal("formSignal", postFormSignal.value);
+          saveInLocalS("formSignal", postFormSignal.value);
         }}
         value={postFormSignal.value.mainPicture}
         class="file-input w-full text-center"

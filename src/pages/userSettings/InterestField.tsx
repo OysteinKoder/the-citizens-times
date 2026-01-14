@@ -15,7 +15,7 @@ export default function InterestsField() {
   const isNearLimit = computed(() => interestCount.value >= MAX_INTERESTS - 1);
   const isAtLimit = computed(() => interestCount.value >= MAX_INTERESTS);
 
-  const saveSignal = (key: string, value: any) =>
+  const saveInLocalS = (key: string, value: any) =>
     localStorage.setItem(key, JSON.stringify(value));
 
   const removeTag = (idx: number) => {
@@ -23,7 +23,7 @@ export default function InterestsField() {
       ...userFormSettings.value,
       interests: interests.value.filter((_: string, i: number) => i !== idx),
     };
-    saveSignal("userFormSettings", userFormSettings.value);
+    saveInLocalS("userFormSettings", userFormSettings.value);
   };
 
   const handleInterestInput = (e: Event) => {
@@ -41,7 +41,7 @@ export default function InterestsField() {
         ...userFormSettings.value,
         interests: [...interests.value, value],
       };
-      saveSignal("userFormSettings", userFormSettings.value);
+      saveInLocalS("userFormSettings", userFormSettings.value);
       input.value = "";
     }
   };

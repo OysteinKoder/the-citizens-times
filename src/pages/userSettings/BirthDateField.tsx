@@ -1,4 +1,4 @@
-import { userFormSettings, saveSignal } from "../../state/globalState";
+import { userFormSettings, saveInLocalS } from "../../state/globalState";
 
 export default function BirthDateField() {
   return (
@@ -16,7 +16,7 @@ export default function BirthDateField() {
           userFormSettings.value.birth_date = (
             e.target as HTMLInputElement
           ).value;
-          saveSignal("userFormSettings", userFormSettings.value);
+          saveInLocalS("userFormSettings", userFormSettings.value);
         }}
       />
     </>

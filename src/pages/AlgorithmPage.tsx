@@ -1,6 +1,6 @@
-import { signal } from "@preact/signals";
 import { supabase } from "../supa-base-client";
 import { useEffect, useState } from "preact/hooks";
+import { algorithmSignal } from "../state/globalState";
 
 type Interest = {
   name: string;
@@ -24,13 +24,14 @@ const AlgorithmPage = () => {
       if (error) throw error;
 
       const interestsObj = data.interests || {};
-      const interestsArray = Object.entries(interestsObj).map(
-        ([name, weight]) => ({
+      const interestsArray = Object.entries(interestsObj)
+        .map(([name, weight]) => ({
           name,
           weight: Number(weight),
-        })
-      );
-      setInterests(() => interestsArray.sort((a, b) => a.weight - b.weight));
+        }))
+        .sort((a, b) => b.weight - a.weight);
+      console.log(interestsArray);
+      setInterests(interestsArray);
       console.log("Fetched interests:", useInterests);
     } catch (err) {
       console.error("Error fetching interests:", err);

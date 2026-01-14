@@ -1,5 +1,5 @@
 import { computed } from "@preact/signals";
-import { postFormSignal, saveSignal } from "../../state/globalState";
+import { postFormSignal, saveInLocalS } from "../../state/globalState";
 
 const MAX_TAGS = 8;
 const SHOW_COUNTER_AT = MAX_TAGS - 2; // 6
@@ -32,7 +32,7 @@ export default function TagsInput() {
       ...postFormSignal.value,
       tags: [...tags.value, value],
     };
-    saveSignal("formSignal", postFormSignal.value);
+    saveInLocalS("formSignal", postFormSignal.value);
     input.value = "";
   };
 
@@ -46,7 +46,7 @@ export default function TagsInput() {
       ...postFormSignal.value,
       tags: tags.value.filter((i: number): boolean => i !== index),
     } as PostFormData;
-    saveSignal("formSignal", postFormSignal.value);
+    saveInLocalS("formSignal", postFormSignal.value);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { Signal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
-import { saveSignal } from "../state/globalState";
+import { saveInLocalS } from "../state/globalState";
 
 // We load the library only when needed
 let cscPromise: Promise<any> | null = null;
@@ -60,7 +60,7 @@ export default function CountryStateCityFields({
 
   const set = (updates: Record<string, string>) => {
     form.value = { ...form.value, ...updates };
-    saveSignal(saveKey, form.value);
+    saveInLocalS(saveKey, form.value);
   };
 
   if (!csc) {
